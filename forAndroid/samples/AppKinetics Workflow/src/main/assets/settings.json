@@ -1,0 +1,11 @@
+{
+    "GDApplicationID":"com.good.example.contributor.jhawkins.appkineticsworkflow",
+    "GDApplicationVersion":"1.0.0.0",
+    "GDLibraryMode": "GDEnterprise",
+    "GDConsoleLogger": [
+        "GDFilterErrors",
+        "GDFilterWarnings",
+        "GDFilterInfo",
+        "GDFilterDetailed",
+    ]
+}

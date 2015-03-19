@@ -1,0 +1,11 @@
+{
+    "GDApplicationID":"com.good.example.contributor.jhawkins.enterprise",
+    "GDApplicationVersion":"1.0.0.0",
+    "GDLibraryMode": "GDEnterprise",
+    "GDConsoleLogger": [
+        "GDFilterErrors_",
+        "GDFilterWarnings_",
+        "GDFilterInfo_",
+        "GDFilterDetailed_",
+    ]
+}

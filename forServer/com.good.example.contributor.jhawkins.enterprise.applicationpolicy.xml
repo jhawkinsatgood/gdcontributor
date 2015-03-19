@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<apd:AppPolicyDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xmlns:apd="urn:AppPolicySchema1.good.com" 
+        xsi:schemaLocation="urn:AppPolicySchema1.good.com AppPolicySchema.xsd" >
+    <!--
+Copyright (c) 2014 Good Technology Corporation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+    -->
+    <!--
+This file contains a Good Dynamics application policy definition. This is a
+sample intended to illustrate use of the feature to application developers.
+
+To use this file, upload it using the Good Control console application
+management screens.
+
+See also the `readme.md` file in the repository directory for this file.
+    -->
+    <pview>
+        <pview type="tabbed" key="about">
+            <title>About</title>
+            <heading>Sample application policy</heading>
+            <desc>This is a sample application policy definition, which could be used with the com.good.example.contributor.jhawkins.enterprise application.</desc>
+        </pview>
+
+        <pview type="tabbed" key="display">
+            <title>Display settings</title>
+            <pe ref="tabs" />
+            <pe ref="Retain" />
+        </pview>
+
+        <pview type="tabbed" key="update">
+            <title>Update settings</title>
+            <pe ref="canUpdate" />
+            <pe ref="photoUpdate" depends="canUpdate" />
+        </pview>
+
+        <pview type="tabbed" key="json">
+            <title>JSON</title>
+            <pe ref="json0" />
+        </pview>
+
+        <pe ref="policyVersion" />
+    </pview>
+
+    <setting name="policyVersion" >
+        <hidden>
+            <key>version</key>
+            <value>2.2</value>
+        </hidden>
+    </setting>
+
+    <setting name="tabs">
+        <multiselect>
+            <key>tabs</key>
+            <label>Dashboard Tabs to Display</label>
+            <value ref="defaultTabs" />
+            <options ref="allTabs"/>
+        </multiselect>
+    </setting>
+    <dl name="allTabs">
+        <dv><desc>Show Personnel</desc>
+            <value>Pers</value></dv>
+        <dv><desc>Show Press</desc>
+            <value>Press</value></dv>
+        <dv><desc>Show Projects</desc>
+            <value>Proj</value></dv>
+        <dv><desc>Show Sales</desc>
+            <value>Sales</value></dv>
+    </dl>
+    <do name="defaultTabs">
+        <value>Press</value>
+        <value>Proj</value>
+    </do>
+
+    <setting name="Retain">
+        <select>
+            <key>Retain</key>
+            <label>Retention Period</label>
+            <value>1 year</value>
+            <options ref="RetainOptions" />
+        </select>
+    </setting>
+    <dl name="RetainOptions" dtype="string">
+        <dv><desc>1 Day</desc><value>1 day</value></dv>
+        <dv><desc>1 Week</desc><value>1 week</value></dv>
+        <dv><desc>1 Month</desc><value>1 month</value></dv>
+        <dv><desc>1 Year</desc><value>1 year</value></dv>
+    </dl>
+
+    <setting name="canUpdate" >
+        <checkbox>
+            <key>canUpdate</key>
+            <label>Can Update</label>
+            <value>false</value>
+        </checkbox>
+    </setting>
+
+    <setting name="photoUpdate" >
+        <checkbox>
+            <key>photoUpdate</key>
+            <label>Can Post Photos</label>
+            <value>false</value>
+        </checkbox>
+    </setting>
+
+    <setting name="json0" >
+        <textarea>
+            <key>json0</key>
+            <label>JSON:</label>
+            <value>{
+"ShareURLs": [
+    "https://hub.corp.good.com/architecture-public/"
+]
+}</value>
+            <maxlength>4096</maxlength>
+        </textarea>
+    </setting>
+
+</apd:AppPolicyDefinition>
