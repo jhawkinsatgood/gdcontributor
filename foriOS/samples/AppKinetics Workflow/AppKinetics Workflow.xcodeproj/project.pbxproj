@@ -10,6 +10,7 @@
 		8161B7041A169EFB00FABCAA /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8161B7031A169EFB00FABCAA /* MainStoryboard.storyboard */; };
 		81AB42F919B4860100BC9E53 /* MainPageForGoodDynamics.m in Sources */ = {isa = PBXBuildFile; fileRef = 81AB42F819B4860100BC9E53 /* MainPageForGoodDynamics.m */; };
 		81AB430019B487B100BC9E53 /* gdRuntimeDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 81AB42FE19B487B100BC9E53 /* gdRuntimeDispatcher.m */; };
+		81CA69601A77FD2300EBF7D1 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CA695F1A77FD2300EBF7D1 /* LocalAuthentication.framework */; };
 		81CB20F119713E1900733EAE /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CB20EC19713E1900733EAE /* libstdc++.dylib */; };
 		81CB20F219713E1900733EAE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CB20ED19713E1900733EAE /* libz.dylib */; };
 		81CB20F319713E1900733EAE /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CB20EE19713E1900733EAE /* MessageUI.framework */; };
@@ -56,6 +57,7 @@
 		81AB42F819B4860100BC9E53 /* MainPageForGoodDynamics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainPageForGoodDynamics.m; sourceTree = "<group>"; };
 		81AB42FD19B487B100BC9E53 /* gdRuntimeDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gdRuntimeDispatcher.h; sourceTree = "<group>"; };
 		81AB42FE19B487B100BC9E53 /* gdRuntimeDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gdRuntimeDispatcher.m; sourceTree = "<group>"; };
+		81CA695F1A77FD2300EBF7D1 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		81CB20EC19713E1900733EAE /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		81CB20ED19713E1900733EAE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		81CB20EE19713E1900733EAE /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -125,6 +127,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81CA69601A77FD2300EBF7D1 /* LocalAuthentication.framework in Frameworks */,
 				81CB20F119713E1900733EAE /* libstdc++.dylib in Frameworks */,
 				81CB20F219713E1900733EAE /* libz.dylib in Frameworks */,
 				81CB20F319713E1900733EAE /* MessageUI.framework in Frameworks */,
@@ -177,6 +180,7 @@
 		92C96BB31922096A0092DBE8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				81CA695F1A77FD2300EBF7D1 /* LocalAuthentication.framework */,
 				81CB20EC19713E1900733EAE /* libstdc++.dylib */,
 				81CB20ED19713E1900733EAE /* libz.dylib */,
 				81CB20EE19713E1900733EAE /* MessageUI.framework */,
@@ -361,6 +365,11 @@
 			attributes = {
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Good Technology";
+				TargetAttributes = {
+					92C96BB01922096A0092DBE8 = {
+						DevelopmentTeam = S99QSEYL6F;
+					};
+				};
 			};
 			buildConfigurationList = 92C96BAC1922096A0092DBE8 /* Build configuration list for PBXProject "AppKinetics Workflow" */;
 			compatibilityVersion = "Xcode 3.2";

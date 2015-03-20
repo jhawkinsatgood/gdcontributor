@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2014 Good Technology Corporation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<html>
+<head>
+    <title>AppKinetics Workflow</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta
+        name="viewport"
+        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width;" />
+    <link
+        rel="stylesheet"
+        type="text/css"
+        href="css/com.good.example.contributor.jhawkins/demo/mainpage.css" />
+    <style type="text/css">
+        #mainpage { background-color: DarkSeaGreen; }
+    </style>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="GoodDynamics.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        window.onerror = function(msg, url, line) {
+            alert('ERROR in file "' + url.split('/').slice(-1) + '" line: ' +
+                  line + ". " + msg);
+            return false;
+        };
+        
+        function loadMainPage(loader_name, mainPageHolder_name, version) {
+            var Demo = com.good.example.contributor.jhawkins.demo;
+            var Utility = Demo.utility;
+
+            var loader = document.getElementById(loader_name);
+            Utility.appendNode('div', "Loading MainPage", loader);
+    
+            var mainPage = new Demo.mainpage.MainPage(
+            ).setTitle( Utility.documentTitle()
+            ).setInformation(
+                version + " GD Runtime via plugin," +
+                ' "' + device.cordova + '" Cordova.'
+            ).setWebView("mainpage").load();
+            
+            var mainPageHolder =
+                document.getElementById(mainPageHolder_name);
+            Utility.appendNode('div', "Showing holder", loader);
+            mainPageHolder.setAttribute('style', 'display: block;');
+            
+            Utility.appendNode('div', "Deleting loader", loader);
+            loader.parentNode.removeChild(loader);
+        }
+
+        function load(loader_name, mainPageHolder_name) {
+            document.addEventListener("deviceready", function() {
+                window.plugins.GDApplication.getVersion(
+                    function (myGDVersion) {
+                        loadMainPage(
+                            loader_name, mainPageHolder_name, myGDVersion);
+                    },
+                    function (myGDVersionError) {
+                        loadMainPage(
+                            loader_name, mainPageHolder_name,
+                            "Unknown version: " + myGDVersionError);
+                    }
+                );
+            }, false);
+        };
+
+        </script>
+</head>
+<body onload="load('loader', 'mainpage_holder');"
+    ><div id="loader"
+        ><h1>Loading...</h1></div
+    ><div id="mainpage_holder" style="display: none;"
+        ><div id="mainpage"> </div
+    ></div
+></body>
+</html>

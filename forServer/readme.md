@@ -104,7 +104,7 @@ following.
     4.  Check that you can ping the GP server machine, at the IP address, from
         the machine on which you will be running the minipush server. If you
         cannot, try the IP address of another Local Area Connection item. (Note:
-        Even a connection that connot connect to the Internet might still be
+        Even a connection that cannot connect to the Internet might still be
         useable for connection from the application server.)
         
     Then check that the minipush server can reach the GP, by running a command

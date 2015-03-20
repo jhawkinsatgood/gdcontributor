@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="com.good.example.contributor.jhawkins" version="1.0.0">
+    <name>com.good.example.contributor.jhawkins</name>
+    <description>Good Dynamics sample code.</description>
+    <author>Jim Hawkins</author>
+    <keywords>AppKinetics, Good Dynamics</keywords>
+    <license>Copyright (c) 2015 Good Technology Corporation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</license>
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines>
+    <js-module src="_package.js" name="Packager">
+        <merges target="com.good.example.contributor.jhawkins" />
+    </js-module>
+    <js-module src="demo/utility.js" name="Utilities for Demo Classes">
+        <clobbers target="com.good.example.contributor.jhawkins.demo.utility" />
+    </js-module>
+    <js-module src="demo/democonsumesendemail.js" name="Demo Send Email">
+        <clobbers target="com.good.example.contributor.jhawkins.demo.democonsumesendemail" />
+    </js-module>
+    <js-module src="demo/democonsumeopenhttpurl.js" name="Demo Open HTTP URL">
+        <clobbers target="com.good.example.contributor.jhawkins.demo.democonsumeopenhttpurl" />
+    </js-module>
+    <js-module
+        src="demo/demoprovidetransferfile.js"
+        name="Demo Provide Transfer File">
+        <clobbers target="com.good.example.contributor.jhawkins.demo.demoprovidetransferfile" />
+    </js-module>
+    <js-module src="demo/mainpage.js" name="MainPage Demo User Interface">
+        <clobbers target="com.good.example.contributor.jhawkins.demo.mainpage" />
+    </js-module>
+    <asset
+        src="demo/mainpage.css"
+        target="css/com.good.example.contributor.jhawkins/demo/mainpage.css" />
+    <config-file target="*Info.plist" parent="CFBundleDocumentTypes">
+        <array>
+            <dict>
+                <key>CFBundleTypeIconFiles</key>
+                <array/>
+                <key>LSHandlerRank</key>
+                <string>Default</string>
+                <key>LSItemContentTypes</key>
+                <array>
+                    <string>public.data</string>
+                </array>
+            </dict>
+        </array>
+    </config-file>
+</plugin>

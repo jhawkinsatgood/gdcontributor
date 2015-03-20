@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CordovaLib/CordovaLib.iml" filepath="$PROJECT_DIR$/CordovaLib/CordovaLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/android.iml" filepath="$PROJECT_DIR$/.idea/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/com.good.gd/dynamics_sdk/libs/handheld/gd/gdHandheld.iml" filepath="$PROJECT_DIR$/com.good.gd/dynamics_sdk/libs/handheld/gd/gdHandheld.iml" />
+    </modules>
+  </component>
+</project>
+

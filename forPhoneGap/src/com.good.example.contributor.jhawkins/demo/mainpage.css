@@ -1,0 +1,54 @@
+#mainpage {
+    font-family: sans-serif;
+    
+    background-color: LightYellow;
+    /* Should be overriden in the application index.html */
+    
+    text-transform: none;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    font-size: 12pt;
+    padding-left: 4pt; /* Moves the controls away from the side */
+    overflow: auto;
+}
+#mainpage div {
+    margin-top: 6pt;
+    margin-bottom: 6pt;
+}
+#mainpage .holder {
+    margin-top: 12pt;
+}
+#mainpage div.picker {
+    margin-top: 12pt;
+    border-top: solid 1pt black;
+}
+#mainpage div.picker div {
+    border-bottom: solid 1pt black;
+    padding-bottom: 8pt;
+}
+#mainpage h1 {
+    margin-top: 18pt;
+    font-size: 18pt;
+    text-align: left;
+}
+#mainpage .command {
+    text-decoration: none;
+    border: 1pt solid black;
+    color: black;
+    padding: 4pt;
+    margin-right: 4pt;
+}
+#mainpage .information {
+    font-size: 8pt;
+}
+#mainpage pre {
+    border: 1pt dashed black;
+    white-space: pre-wrap;
+    overflow: auto;
+}
+#mainpage textarea {
+    font-size: 18pt;
+}
