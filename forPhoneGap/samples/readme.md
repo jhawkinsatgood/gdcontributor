@@ -131,6 +131,6 @@ The AppKinetics Workflow application has been tested with the following service
 provider applications.
 
 Service       | Provider    | Version for Android | Version for iOS
---------------|-------------|--------------------------------------
+--------------|-------------|---------------------|----------------
 Send Email    | Good Work   | 1.3.0.57            | 1.3.0.159
 Open HTTP URL | Good Access | 2.2.0.303           | 2.2.1.405
