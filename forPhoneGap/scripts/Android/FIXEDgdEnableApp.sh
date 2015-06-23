@@ -26,6 +26,7 @@ COLOR_RESET="\x1b[0m"
 
 FILE_PLUGIN_INSTALLED=false
 
+
 function echoColor
 {
   echo -e "$1$2$COLOR_RESET"
@@ -188,6 +189,9 @@ function changeRootFiles()
 
     echoColor $COLOR_YELLOW "Copying libraries.."
     cp -Rf  "$ORIGINAL_PATH/Files/libs" "$PROJECT_PATH/"
+
+    # Removing custom_rules.xml file which causes moving generated files to ant-gen folder.
+    rm -rf "$PROJECT_PATH/custom_rules.xml"
 }
 
 function changeSourcesFolder()
@@ -205,6 +209,8 @@ function changeSourcesFolder()
     cp "$ORIGINAL_PATH/Files/src/MainActivity.java" "./"
     sed -i -e 's/applicationPackage/'$APPLICATION_PACKAGE'/g' ./MainActivity.java
     rm -rf "MainActivity.java-e"
+
+    cp "$ORIGINAL_PATH/Files/src/cordova_build.java" "./"
 }
 
 function changeAssetsFolder()
@@ -242,9 +248,8 @@ function addDependencies()
     fi
     cp -Rf "gd" "$PROJECT_PATH/"
     chmod -R u+w "$PROJECT_PATH/gd"
-    
+    > "$PROJECT_PATH/project.properties"
     cat "$ORIGINAL_PATH/Files/application.properties" >> "$PROJECT_PATH/project.properties"
-    sed -i -e 's/..gd/gd/g' "$PROJECT_PATH/project.properties"
     rm -rf "$PROJECT_PATH/project.properties-e"
     rm -rf "$PROJECT_PATH/gd/backup"
     rm -rf "$PROJECT_PATH/gd/gd.iml"
