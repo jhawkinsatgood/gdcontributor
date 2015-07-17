@@ -3,7 +3,7 @@ Contributor Fixes
 This directory contains contributed fixes to the scripts and templates in the GD
 PhoneGap Plugin.
 
-The fixes are for version 1.10.40 of the plugin.
+The fixes are for version 1.11.52 of the plugin.
 
 Installation
 ------------
