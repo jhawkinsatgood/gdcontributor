@@ -70,6 +70,64 @@ function setAndroidDir()
     cd "$SAVE_DIR"
 }
 
+
+function rebuild()
+{
+    SAVE_DIR="$PWD"
+    DID=""
+    # Change to the project directory, if necessary.
+    # If it's not here, assume we are already in the project directory.
+    if test -d "$APP_NAME" ;
+    then
+        cd "$APP_NAME"
+    fi
+
+    # Uncomment the following to remove and re-add the code plugin
+    #cordova plugin remove com.good.example.contributor.jhawkins
+    #cordova plugin add ../../src/com.good.example.contributor.jhawkins
+
+    # Uncomment the following to refresh the source from the original.
+    #echo "Reloading www/ from original."
+    #cp -r "../../src/${APP_ID}/www/" www/
+
+    # Save the list of plugins, and make a temporary copy of the installed
+    # plugins themselves.
+    local PLUGINS_TMP="$TMPDIR"
+    if test -z "$PLUGINS_TMP" ;
+    then
+        $PLUGINS_TMP='/tmp'
+    fi
+    PLUGINS_TMP="${PLUGINS_TMP}/gdcontributorplugins$$/"
+    cp -r "plugins" "$PLUGINS_TMP"
+
+    # Uncomment the following to remove and re-add the file plugin, which can
+    # resolve some issues.
+    cordova plugin remove org.apache.cordova.file
+    cordova plugin add org.apache.cordova.file --searchpath "$PLUGINS_TMP"
+    
+    # Remove temporary copy of the plugins.
+    rm -rf "$PLUGINS_TMP"
+
+    if test -d platforms/android ;
+    then
+        echo "Synchronising asset files for Android"
+        cp -R www/ platforms/android/assets/www/
+        DID="${DID} Android"
+    fi
+    if test -d platforms/ios ;
+    then
+        echo "Synchronising asset files for iOS"
+        cp -R www/ platforms/ios/www/
+        DID="${DID} iOS"
+    fi
+    if test -z "$DID" ;
+    then
+        echo "Nothing to rebuild"
+    fi
+    cd "$SAVE_DIR"
+}
+# rebuild()
+
 function create()
 {
     # Create a cordova project and copy in the sample application source.
@@ -81,12 +139,13 @@ function create()
     
     # Add some typical plugins.
     # Use these when connected to the Internet
-    cordova plugin add org.apache.cordova.device
-    cordova plugin add org.apache.cordova.file
-    cordova plugin add org.apache.cordova.console
-    # Otherwise, you can replace the IDs in the above with paths to the plugin
-    # sub-directory of a local project in which you added the plugin.
-    # Cordova will copy from the local project to this project.
+    cordova plugin add org.apache.cordova.device \
+                       org.apache.cordova.file \
+                       org.apache.cordova.console
+                       
+    # Append the following line after a backslash if you are not connected to
+    # the Internet. Cordova will then add the plugins from your local copies.
+    # --searchpath "/path/to/an/existing/Cordova/project/plugins/"
     
     # Add the demo code, which is provided as a plugin.
     cordova plugin add ../../src/com.good.example.contributor.jhawkins
@@ -105,6 +164,18 @@ function create()
 
     # Save the project directory
     export PROJECT_DIR="$PWD"
+
+    # Save the list of plugins, and make a temporary copy of the installed
+    # plugins themselves.
+    local PLUGINS=`cordova plugin list | cut -f 1 -d ' '`
+    local PLUGINS_TMP="$TMPDIR"
+    if test -z "$PLUGINS_TMP" ;
+    then
+        $PLUGINS_TMP='/tmp'
+    fi
+    PLUGINS_TMP="${PLUGINS_TMP}/gdcontributorplugins$$/"
+    cp -r "$PROJECT_DIR/plugins" "$PLUGINS_TMP"
+
     # Change back to the original directory in case any paths were specified
     # relatively.
     cd ..
@@ -114,12 +185,19 @@ function create()
         # Enable GD for Android
         cd "${GD_PLUGIN_DIR}/Android/GDCordova3x/"
     
-        bash ./FIXEDgdEnableApp.sh -n "$APP_ID_PREFIX" -g "$ORGANISATION_NAME" \
-            -i "$APP_ID" -p "${PROJECT_DIR}/platforms/android/"
+        bash ./FIXEDgdEnableApp.sh \
+            -n "$APP_ID_PREFIX" \
+            -g "$ORGANISATION_NAME" \
+            -i "$APP_ID" \
+            -p "${PROJECT_DIR}/platforms/android/"
 
         # Fix up the project files created by the enable script.
         cd "${PROJECT_DIR}"
-    
+
+        # Remove and add back all the plugins, from the temporary copy.
+        cordova plugin rm $PLUGINS
+        cordova plugin add $PLUGINS --searchpath "$PLUGINS_TMP"
+
         echo "Fixing project.properties file."
         # Enable Android manifest merging
         echo 'manifestmerger.enabled=true' >> platforms/android/project.properties
@@ -133,19 +211,7 @@ function create()
         # Create the directory for compiler output.
         mkdir platforms/android/output
 
-        echo "Copying IDEA template."
-        export IDEA_TEMPLATE="../../src/${APP_ID}/template"
-        cp -r "$IDEA_TEMPLATE/android.idea/" platforms/android/.idea
-        chmod -R u+wx platforms/android/.idea
-        # printf is more portable than echo -n
-        printf "$APP_NAME" > platforms/android/.idea/.name
-        cp "$IDEA_TEMPLATE/CordovaLib.iml" \
-            platforms/android/CordovaLib/CordovaLib.iml
-        cp "$IDEA_TEMPLATE/gdHandheld.iml" \
-            platforms/android/com.good.gd/dynamics_sdk/libs/handheld/gd/gdHandheld.iml
-        chmod u+w \
-            platforms/android/CordovaLib/CordovaLib.iml \
-            platforms/android/com.good.gd/dynamics_sdk/libs/handheld/gd/gdHandheld.iml
+        copyIDEATemplate "../../src/${APP_ID}/template" "platforms/android/"
     
         echo "Overwriting settings.json file."
         cat >platforms/android/assets/settings.json <<SETTINGS.JSON
@@ -215,52 +281,92 @@ ARCHITECTURES.NOTE
         # Switch back to initial directory
         cd ..
     fi
+    
+    # Remove temporary copy of the plugins.
+    rm -rf "$PLUGINS_TMP"
 }
-
-function rebuild()
+# create()
+function copyIDEATemplate
 {
-    SAVE_DIR="$PWD"
-    DID=""
-    # Change to the project directory, if necessary.
-    # If it's not here, assume we are already in the project directory.
-    if test -d "$APP_NAME" ;
-    then
-        cd "$APP_NAME"
-    fi
+    local SRC_PATH="$1"
+    shift
+    local DEST_PATH="$1"
+    shift
+    
+    echo 'Copying IDEA template.'
+    ls -la "$DEST_PATH/libs"
 
-    # Uncomment the following to remove and re-add the code plugin
-    #cordova plugin remove com.good.example.contributor.jhawkins
-    #cordova plugin add ../../src/com.good.example.contributor.jhawkins
+    cp -r "$SRC_PATH/android.idea/" $DEST_PATH/.idea
+    chmod -R u+wx $DEST_PATH/.idea
+    # printf is more portable than echo -n
+    printf "$APP_NAME" > "$DEST_PATH/.idea/.name"
 
-    # Uncomment the following to refresh the source from the original.
-    #echo "Reloading www/ from original."
-    #cp -r "../../src/${APP_ID}/www/" www/
+    # Overwrite the android.iml file with something that includes all the files
+    # that happen to be in the android/libs directory.
+    #
+    # Preamble ...
+    cat >"$DEST_PATH/.idea/android.iml" <<'ANDROID.IML'
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="android" name="Android">
+      <configuration>
+        <option name="GEN_FOLDER_RELATIVE_PATH_APT" value="/../../android/gen" />
+        <option name="GEN_FOLDER_RELATIVE_PATH_AIDL" value="/../../android/gen" />
+        <option name="MANIFEST_FILE_RELATIVE_PATH" value="/../../android/AndroidManifest.xml" />
+        <option name="RES_FOLDER_RELATIVE_PATH" value="/../../android/res" />
+        <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/../../android/assets" />
+        <option name="LIBS_FOLDER_RELATIVE_PATH" value="/../../android/libs" />
+        <option name="PROGUARD_LOGS_FOLDER_RELATIVE_PATH" value="/../../android/proguard_logs" />
+        <option name="ENABLE_MANIFEST_MERGING" value="true" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="CordovaLib" exported="" />
+    <orderEntry type="module" module-name="gdHandheld" exported="" />
+ANDROID.IML
+    #
+    # ... per file part ...
+    local LIB_FILES=`ls "$DEST_PATH/libs"`
+    #
+    for LIB_FILE in $LIB_FILES
+    do
+        cat >>"$DEST_PATH/.idea/android.iml" <<ANDROID.IML
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://\$MODULE_DIR\$/libs/${LIB_FILE}!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+ANDROID.IML
+    done
+    #
+    # ... end of the file.
+    cat >>"$DEST_PATH/.idea/android.iml" <<'ANDROID.IML'
+  </component>
+</module>
+ANDROID.IML
 
-    # Uncomment the following to remove and re-add the file plugin, which can
-    # resolve some issues.
-    cordova plugin remove org.apache.cordova.file
-    cordova plugin add org.apache.cordova.file
-    # See also the comment above about using a local project instead when not
-    # connected to the Internet.
-
-    if test -d platforms/android ;
-    then
-        echo "Synchronising asset files for Android"
-        cp -R www/ platforms/android/assets/www/
-        DID="${DID} Android"
-    fi
-    if test -d platforms/ios ;
-    then
-        echo "Synchronising asset files for iOS"
-        cp -R www/ platforms/ios/www/
-        DID="${DID} iOS"
-    fi
-    if test -z "$DID" ;
-    then
-        echo "Nothing to rebuild"
-    fi
-    cd "$SAVE_DIR"
+    cp "$SRC_PATH/CordovaLib.iml" \
+        $DEST_PATH/CordovaLib/CordovaLib.iml
+    cp "$SRC_PATH/gdHandheld.iml" \
+        $DEST_PATH/com.good.gd/dynamics_sdk/libs/handheld/gd/gdHandheld.iml
+    chmod u+w \
+        $DEST_PATH/CordovaLib/CordovaLib.iml \
+        $DEST_PATH/com.good.gd/dynamics_sdk/libs/handheld/gd/gdHandheld.iml
 }
+# copyIDEATemplate()
 
 if test $# '>' 0;
 then

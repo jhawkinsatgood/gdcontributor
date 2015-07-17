@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@
 -(instancetype)init;
 @property (nonatomic, assign) BOOL hasSetUp;
 @property (nonatomic, assign) BOOL hasLoadedStoryBoard;
+@property (nonatomic, assign) BOOL hasAuthorized;
 -(void)didAuthorize;
 @end
 
@@ -36,11 +37,10 @@
 +(instancetype)sharedInstance
 {
     static MainPageForGoodDynamics *mainPageForGoodDynamics = nil;
-    @synchronized(self) {
-        if (!mainPageForGoodDynamics) {
-            mainPageForGoodDynamics = [MainPageForGoodDynamics new];
-        }
-    }
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
+        mainPageForGoodDynamics = [[MainPageForGoodDynamics alloc] init];
+    });
     return mainPageForGoodDynamics;
 }
 
@@ -77,24 +77,24 @@
 
 -(void)didAuthorize
 {
-    if (_hasAuthorized) {
+    if (self.hasAuthorized) {
         if (self.uiWebView) {
             // Following line also sets mainPage as the UIWebView delegate.
-            [_mainPage setUIWebView:self.uiWebView];
-            [_mainPage load];
+            [self.mainPage setUIWebView:self.uiWebView];
+            [self.mainPage load];
         }
         else {
-            if (self.storyboardName != nil && !_hasLoadedStoryBoard) {
+            if (self.storyboardName != nil && !self.hasLoadedStoryBoard) {
                 // If a storyboard has been specified but not yet loaded, then
                 // load it now.
                 UIStoryboard *uiStoryboard =
                 [UIStoryboard storyboardWithName:self.storyboardName
                                           bundle:nil];
-                _hasLoadedStoryBoard = YES;
+                self.hasLoadedStoryBoard = YES;
                 
                 // Next line kicks off loading of the view controller, which
                 // will in turn result in the uiWebView property being set.
-                _uiApplicationDelegate.window.rootViewController =
+                self.uiApplicationDelegate.window.rootViewController =
                 [uiStoryboard instantiateInitialViewController];
             }
             // If the end user has authorised, but there is no uiWebView, and
@@ -108,25 +108,30 @@
 
 -(void)setUp
 {
-    if ([_mainPage information] == nil) {
+    if ([self.mainPage information] == nil) {
         // The mainBundle is used for a string that is passed to the user
         // interface builder.
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         
-        [_mainPage setInformation:[NSString stringWithFormat:@"%@ %@",
-                                   [[GDiOS sharedInstance] getVersion],
-                                   [infoDictionary
-                                    objectForKey:@"GDApplicationID"]] ];
+        [self.mainPage setInformation:[NSString stringWithFormat:@"%@ %@",
+                                       [[GDiOS sharedInstance] getVersion],
+                                       [infoDictionary
+                                        objectForKey:@"GDApplicationID"]] ];
     }
 
-    if (!_hasSetUp) {
+    if (!self.hasSetUp) {
         [[gdRuntimeDispatcher sharedInstance]
          addObserverForEventType:GDAppEventAuthorized
          usingBlock:GDRUNTIMEOBSERVER(event) {
-             _hasAuthorized = YES;
-             [self didAuthorize];
+             // This event is also received when the user unlocks the UI after
+             // inactivity. There is no need to re-run didAuthorize at that time
+             // or at any time.
+             if (!self.hasAuthorized) {
+                 self.hasAuthorized = YES;
+                 [self didAuthorize];
+             }
          }];
-        _hasSetUp = YES;
+        self.hasSetUp = YES;
     }
   
 }

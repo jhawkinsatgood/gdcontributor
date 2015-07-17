@@ -378,8 +378,8 @@
 			dependencies = (
 				301BF551109A68C00062928A /* PBXTargetDependency */,
 			);
-			name = __TemplateAppName__;
-			productName = __TemplateAppName__;
+			name = "__TemplateAppName__";
+			productName = "__TemplateAppName__";
 			productReference = 1D6058910D05DD3D006BFB54 /* __TemplateAppName__.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -529,7 +529,7 @@
 					"\"$(BUILT_PRODUCTS_DIR)/libCordova.a\"",
 					"-ObjC",
 				);
-				PRODUCT_NAME = __TemplateAppName__;
+				PRODUCT_NAME = "__TemplateAppName__";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -568,7 +568,7 @@
 					"\"$(BUILT_PRODUCTS_DIR)/libCordova.a\"",
 					"-ObjC",
 				);
-				PRODUCT_NAME = __TemplateAppName__;
+				PRODUCT_NAME = "__TemplateAppName__";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

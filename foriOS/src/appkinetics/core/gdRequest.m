@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -274,19 +274,29 @@
                                  andVersion:[self getServiceVersion]
                                  andType:GDServiceProviderApplication];
 
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    NSString *exclude = [infoDictionary objectForKey:@"CFBundleIdentifier"];
+    NSUInteger provider_count = 0;
+    
     // Store the results in an array in the StorePath
     for (int i=0; i<[provider_details count]; i++) {
         GDServiceProvider *provideri = provider_details[i];
+        
+        if ([exclude isEqualToString:[provideri address]]) {
+            continue;
+        }
+        
         [store pathSet:[[[[[[PathStore alloc] initAsDictionary]
                     pathSet:[provideri identifier], @"identifier", nil]
                     pathSet:[provideri name], @"name", nil]
                     pathSet:[provideri address], @"address", nil]
                     pathSet:[provideri version], @"version", nil]
                  a:@[@"Request", @"Provider", @"Query",
-                     [NSNumber numberWithInt:i]]];
+                     [NSNumber numberWithInteger:provider_count]]];
+        provider_count++;
     }
 
-    if ([provider_details count] == 1) {
+    if (provider_count == 1) {
         [self selectProvider:0];
     }
     
@@ -306,7 +316,7 @@
     }
     
     PathStore *providers = (PathStore *)providers_object;
-    int providers_length = [providers length];
+    NSUInteger providers_length = [providers length];
     // Next line returns an empty array.
     if (providers_length <= 0) return @[];
     NSMutableArray *ret = [NSMutableArray arrayWithCapacity:providers_length];

@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -170,7 +170,7 @@
     return self;
 }
 
--(int)length
+-(NSUInteger)length
 {
     if (arr) {
         return [arr count];
@@ -317,7 +317,7 @@
     PathStore *value_path = (PathStore *)value;
     if (![value_path isArray]) return nil;
     
-    int value_length = [value_path length];
+    NSUInteger value_length = [value_path length];
     if (value_length <= 0) return nil;
     
     BOOL allNull = true;
@@ -375,7 +375,7 @@
          */
         if ([pathi isKindOfClass:[NSNumber class]]) {
             if ([(NSNumber *)pathi intValue] < 0) {
-                pathi = [NSNumber numberWithInt:[set_point length]];
+                pathi = [NSNumber numberWithInteger:[set_point length]];
             }
             // pathi will be 0 if set_point is not an array.
         }

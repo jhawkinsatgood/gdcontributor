@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,13 +40,13 @@
 }
 
 -(NSArray *)demoExecuteOrPickList {
-    if (!_request) _request = [gdRequestTransferFile new];
-    return [[_request queryProviders] getProviderNames];
+    if (!self.request) self.request = [gdRequestTransferFile new];
+    return [[self.request queryProviders] getProviderNames];
 }
 
 -(void)demoPickAndExecute:(int)pickListIndex
 {
-    if (!_request) _request = [gdRequestTransferFile new];
+    if (self.request == nil) self.request = [gdRequestTransferFile new];
 
     // Generate a file for illustration purposes.
     NSString *filename = [NSStringFromClass([self class])
@@ -58,15 +58,16 @@
     }
 
     // Send the request.
-    error = [[[_request selectProvider:pickListIndex]
+    error = [[[self.request selectProvider:pickListIndex]
               addAttachments:@[filename]]
              sendOrMessage:nil];
-
-    // Display the error, if any
-    if (error && DEMOUI) [DEMOUI demoLogString:error];
+    // The above returns a message if there is an error in the send. The
+    // message is also inserted into the Request object, which is dumped
+    // below, so there is no need to log it additionally.
+    if (DEMOUI) [DEMOUI demoLogFormat:@"Sent request:%@\n", self.request];
     
     // Discard the request.
-    _request = nil;
+    self.request = nil;
     return;
 }
 

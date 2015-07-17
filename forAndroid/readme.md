@@ -56,19 +56,19 @@ The contributor code has been tested in the following environment.
 
 Component                       | Version
 --------------------------------|--------
-Android Studio                  | 1.0.2
+Android Studio                  | 1.2.2
 JRE                             | 1.7.0
-Android SDK Tools               | 24.0.2
-Physical device running Android | 4.4.2
-Good Dynamics SDK for Android   | 1.10.1178
-Good Control and Good Proxy     | 1.9.45
-OS X                            | 10.10.2
+Android SDK Tools               | 24.3.3
+Physical device running Android | 5.0.1
+Good Dynamics SDK for Android   | 1.11.1206
+Good Control and Good Proxy     | 1.10.47
+OS X                            | 10.10.4
 
 The AppKinetics Workflow application has been tested with the following service
 provider applications for Android.
 
 Service       | Provider    | Version
 --------------|-------------|----------
-Send Email    | Good Work   | 1.3.0.57
-Open HTTP URL | Good Access | 2.2.0.303
-Transfer File | Good Share  | 3.1.9
+Send Email    | Good Work   | 1.5.0.78
+Open HTTP URL | Good Access | 2.4.0.629
+Transfer File | Good Share  | 3.1.11

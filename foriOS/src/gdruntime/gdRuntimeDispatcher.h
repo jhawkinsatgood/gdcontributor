@@ -57,6 +57,9 @@ typedef void (^gdConfigurationObserver)(NSDictionary *, NSString *);
 
 +(NSString *)JSONStringFrom:(NSDictionary *)dictionary;
 +(NSObject *)JSONItemFrom:(NSObject *)value;
++(NSInteger)addDictionariesFromJSON:(NSMutableDictionary *)dictionary
+                         withSuffix:(NSString *)suffix;
+
 +(NSDictionary *)gdApplicationConfigWithoutDeprecations;
 
 @end

@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,13 +54,15 @@ public class DemoConsumeTransferFile extends Component {
         }
 
         // Send the request.
-        error = request.selectProvider(pickListIndex)
-                .addAttachments(filename).sendOrMessage();
+        request.selectProvider(pickListIndex)
+        .addAttachments(filename)
+        .sendOrMessage();
+        // The above returns a message if there is an error in the send. The
+        // message is also inserted into the Request object, which is dumped
+        // below, so there is no need to log it additionally.
+        if (userInterface != null)
+            userInterface.demoLog("Sent request:" + request.toString(2) + "\n");
 
-        // Display the error, if any
-        if (error != null && userInterface != null) 
-            userInterface.demoLog(error);
-        
         // Discard the request.
         request = null;
         return;

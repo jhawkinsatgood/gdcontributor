@@ -22,11 +22,11 @@
 package com.good.example.contributor.jhawkins.enterprise;
 
 import android.os.Bundle;
-import android.webkit.WebView;
 import android.app.Activity;
 import android.graphics.Color;
 
 import com.good.gd.GDAndroid;
+import com.good.gd.widget.GDWebView;
 
 import com.good.example.contributor.jhawkins.demo.MainPageForGoodDynamics;
 import com.good.example.contributor.jhawkins.demo.DemoApplicationPolicies;
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        WebView webView = (WebView) findViewById(R.id.webView);
+        GDWebView webView = (GDWebView) findViewById(R.id.webView);
 
         MainPageForGoodDynamics mainPageForGD =
                 MainPageForGoodDynamics.getInstance();

@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@
 #import "DemoConsumeTransferFile.h"
 #import "DemoProvideTransferFile.h"
 #import "DemoConsumeOpenHTTPURL.h"
+#import "DemoTicker.h"
 
 @implementation AppDelegate
 
@@ -40,12 +41,13 @@
     // The mainBundle is used for a string that is passed to the user interface
     // builder.
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-    [mainPage setTitle:[infoDictionary objectForKey:@"CFBundleDisplayName"]];
+    [mainPage setTitle:[infoDictionary objectForKey:@"CFBundleName"]];
     [mainPage setBackgroundColour:@"DarkSeaGreen"];
     [mainPage addDemoClasses:@[ [DemoConsumeSendEmail class],
                                 [DemoConsumeTransferFile class],
                                 [DemoConsumeOpenHTTPURL class],
-                                [DemoProvideTransferFile class] ]];
+                                [DemoProvideTransferFile class],
+                                [DemoTicker class] ]];
     
 	self.window = [gdRuntime getWindow];
     
@@ -53,7 +55,7 @@
                             bundle:nil
                              color:[UIColor blackColor]];
 
-    [MainPageForGoodDynamics sharedInstance].storyboardName = @"MainStoryboard";
+    [MainPageForGoodDynamics sharedInstance].storyboardName = @"Main";
     [MainPageForGoodDynamics sharedInstance].uiApplicationDelegate = self;
     // The next line will attach a GD authorization listener that:
     // -   Gets a WebView setting from the ViewController and applies it to the
@@ -65,7 +67,7 @@
 	
 	// Show the Good Authentication UI.
 	[gdRuntime authorize];
-	
+
 	return YES;
 }
 

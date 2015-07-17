@@ -241,7 +241,7 @@ function addDependencies()
     echoColor $COLOR_YELLOW "Adding libraries dependencies..."
     #cd "$ORIGINAL_PATH"
     #cd ..
-    cd "$HOME/AndroidStudio/sdk/extras/good/dynamics_sdk/libs/handheld/"
+    cd "$ANDROID_HOME/extras/good/dynamics_sdk/libs/handheld/"
     if ! [ -d "./gd" ]; then
         echoColor $COLOR_RED "Can't find GD Core library in path - `pwd`"
         exit
@@ -259,6 +259,14 @@ function addDependencies()
 
 function parseXml()
 {
+    local PLUGINS_TMP="$TMPDIR"
+    if test -z "$PLUGINS_TMP" ;
+    then
+        $PLUGINS_TMP='/tmp'
+    fi
+    PLUGINS_TMP="${PLUGINS_TMP}/gdenableplugins$$/"
+    cp -r "$PROJECT_PATH/../../plugins" "$PLUGINS_TMP"
+    
     #Gettings array of previously installed plugins
     local PLUGINS=`grep -ro '<param[ \t].*value="\([^"]*\)"' "$PROJECT_PATH/res/xml/config.xml" | grep -o 'value="[^"]*"' | cut -f2 -d'"'`
 
@@ -280,9 +288,11 @@ function parseXml()
                 FILE_PLUGIN_INSTALLED=true
             fi
             cordova plugin remove $PLUGIN_FOR_INSTALL
-            cordova plugin add $PLUGIN_FOR_INSTALL
+            cordova plugin add $PLUGIN_FOR_INSTALL --searchpath "$PLUGINS_TMP"
         fi
     done
+    
+    rm -rf "$PLUGINS_TMP"
 
     #If file plugin wasn't previously installed then do it.
     if [ $FILE_PLUGIN_INSTALLED == false ] ; then

@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,22 +29,24 @@ import com.good.example.contributor.jhawkins.demoframework.Component;
  * This class illustrates use of the ConsumeSendEmail class.
  */
 public class DemoConsumeSendEmail extends Component {
+    private RequestSendEmail request = null;
     
     public DemoConsumeSendEmail() {
         super();
         demoExecuteLabel = "Send Email";
     }
-
-    /** Send an illustrative service request.
-     * Call this function to send a service request that illustrates use of all
-     * parameter keys, and includes some file attachments.
-     *
-     * Files for attachment are created on-the-fly.
-     *
-     * \return String containing a transcript of the service request.
-     */
+    @Override
     public String[] demoExecuteOrPickList()
     {
+        if (request == null) request = new RequestSendEmail();
+        return request.queryProviders().getProviderNames();
+    }
+
+    @Override
+    public void demoPickAndExecute(int pickListIndex)
+    {
+        if (request == null) request = new RequestSendEmail();
+
         // Create illustrative files for attachment.
         String attachments[] = {
                 this.getClass().getSimpleName() + ".txt",
@@ -54,15 +56,7 @@ public class DemoConsumeSendEmail extends Component {
         if (error != null && userInterface != null) 
             userInterface.demoLog(error);
 
-        // Create a request object.
-        RequestSendEmail request = new RequestSendEmail();
-
-        // Execute a service discovery query to find the provider.
-        // It's OK to select the first one, because GFE is the only provider.
-        request.queryProviders().getProviderNames();
-        request.selectProvider(0);
-
-        // Add all parameters and send the request.
+        // Add all parameters, select the provider, send the request.
         request.addToAddresses(
                 "diagnostic.to_address.one@example.com",
                 "diagnostic.to_address.two_nodomain")
@@ -79,13 +73,16 @@ public class DemoConsumeSendEmail extends Component {
                 "Diagnostic body text, line 2. " + 
                 "Line 2 is the last line.")
         .addAttachments(attachments)
+        .selectProvider(pickListIndex)
         .sendOrMessage();
         // The above returns a message if there is an error in the send. The
         // message is also inserted into the Request object, which is dumped
         // below, so there is no need to log it additionally.
         if (userInterface != null)
             userInterface.demoLog("Sent request:" + request.toString(2) + "\n");
-        
-        return null;
+
+        // Discard the request.
+        request = null;
+        return;
     }
 }

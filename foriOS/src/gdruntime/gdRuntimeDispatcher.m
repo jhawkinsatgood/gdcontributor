@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,11 +39,10 @@
 +(instancetype)sharedInstance
 {
     static gdRuntimeDispatcher *dispatcher = nil;
-    @synchronized(self) {
-        if (!dispatcher) {
-            dispatcher = [gdRuntimeDispatcher new];
-        }
-    }
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
+        dispatcher = [gdRuntimeDispatcher new];
+    });
     return dispatcher;
 }
 
@@ -76,7 +75,7 @@
                      objectForKey:[NSNumber numberWithInt:type]];
     if (ret == nil) {
         NSString *error = [NSString stringWithFormat:@"gdRuntimeDispatcher "
-                           "nameForEvent(%d) has no name\n", type];
+                           "nameForEvent(%ld) has no name\n", (long)type];
         assert(error);
     }
     return ret;

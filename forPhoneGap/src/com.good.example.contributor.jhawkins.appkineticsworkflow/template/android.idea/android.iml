@@ -36,7 +36,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/gdcordova-3.x-1.10.40.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/gdcordova-3.x-1.11.52.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

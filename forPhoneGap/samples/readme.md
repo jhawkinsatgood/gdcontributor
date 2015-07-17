@@ -23,13 +23,24 @@ To create the contributor sample application:
     the project template for iOS. See the `scripts/` sub-directory of this
     repository for instructions.
 4.  Open a terminal window and cd to this `samples/` directory in your copy.
+
+    If you have previously built the samples in this directory, and want to
+    update to the latest sample code and GD SDKs, then delete the sample project
+    before proceeding. For example, run the following command line:
+    
+        rm -rf 'AppKinetics Workflow'
+
 5.  Run the `build.sh` script. Specify the directory in which you extracted the
     GD PhoneGap Plugin download as the command line parameter. Like this:
 
         ./build.sh /path/to/plugindownload
     
-    Note that the `path/to/plugindownload` directory will have `iOS/` and
-    `Android/` sub-directories.
+    In case you are not sure you have the correct path you can check that your
+    `path/to/plugindownload` directory has `iOS/` and `Android/`
+    sub-directories.
+    
+    The script output might advise you of some necessary manual changes to make
+    to your projects. Make those changes before proceeding.
 
 6.  This will create a sub-directory that contains a Cordova project for the
     sample application.
@@ -114,23 +125,23 @@ The script and sample application have been tested in the following environment:
 
 Component                       | Version
 --------------------------------|------------
-Android Studio                  | 1.1.0
+Android Studio                  | 1.2.2
 JRE                             | 1.7.0
-Android SDK Tools               | 24.0.2
-Physical device running Android | 4.4.2
-Good Dynamics SDK for Android   | 1.10.1178
-Apple Xcode                     | 6.2
-iPad device running iOS         | 8.1.3
-Good Dynamics SDK for iOS       | 1.10.4368
+Android SDK Tools               | 24.3.3
+Physical device running Android | 5.0.1
+Good Dynamics SDK for Android   | 1.11.1206
+Apple Xcode                     | 6.4
+iPad device running iOS         | 8.4
+Good Dynamics SDK for iOS       | 1.11.4388
 Cordova                         | 3.5.0-0.2.7
-Good Dynamics PhoneGap Plugin   | 1.10.40
-Good Control and Good Proxy     | 1.9.45
-OS X                            | 10.10.2
+Good Dynamics PhoneGap Plugin   | 1.11.52
+Good Control and Good Proxy     | 1.10.47
+OS X                            | 10.10.4
 
 The AppKinetics Workflow application has been tested with the following service
 provider applications.
 
 Service       | Provider    | Version for Android | Version for iOS
 --------------|-------------|---------------------|----------------
-Send Email    | Good Work   | 1.3.0.57            | 1.3.0.159
-Open HTTP URL | Good Access | 2.2.0.303           | 2.2.1.405
+Send Email    | Good Work   | 1.5.0.78            | 1.4.2.402
+Open HTTP URL | Good Access | 2.4.0.629           | 2.4.0.703

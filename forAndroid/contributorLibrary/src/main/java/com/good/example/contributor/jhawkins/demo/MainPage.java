@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -183,19 +183,13 @@ public class MainPage implements UserInterface {
             else if (pickList.length < 1) {
             	// Empty pick list.
             	pickList = null;
-            	demoLog("No providers.");
+            	demoLog("No options.");
             	// demoLog triggers reloadHTML.
-            }
-            else if (pickList.length == 1) {
-            	// One item, pick it automatically.
-            	pickList = null;
-            	demoi.demoPickAndExecute(0);
-            	reloadHTML();
             }
             else {
             	// Actual pick list.
             	pickFor = parameter_int;
-            	demoLog("Providers: " + pickList.length);
+            	demoLog("Options: " + pickList.length);
             	// demoLog triggers reloadHTML.
             }
         }

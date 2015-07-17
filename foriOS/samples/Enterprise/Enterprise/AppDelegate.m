@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@
     // The mainBundle is used for a string that is passed to the user interface
     // builder.
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-    [mainPage setTitle:[infoDictionary objectForKey:@"CFBundleDisplayName"]];
+    [mainPage setTitle:[infoDictionary objectForKey:@"CFBundleName"]];
     [mainPage setBackgroundColour:@"LightSalmon"];
     [mainPage addDemoClasses:@[ [DemoApplicationConfiguration class],
                                 [DemoApplicationPolicies class],
@@ -51,7 +51,7 @@
                             bundle:nil
                              color:[UIColor blackColor]];
     
-    [[MainPageForGoodDynamics sharedInstance] setStoryboardName:@"MainStoryboard"];
+    [[MainPageForGoodDynamics sharedInstance] setStoryboardName:@"Main"];
     [[MainPageForGoodDynamics sharedInstance] setUIApplicationDelegate:self];
     // The next line will attach a GD authorization listener that:
     // -   Gets a WebView setting from the ViewController and applies it to the

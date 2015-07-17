@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -83,6 +83,49 @@
     return message;
 }
 
++(NSString *)copyFromResourceDirectoryOrError:(NSString *)directory
+                                         name:(NSString **)filename
+{
+    NSString *message = nil;
+    NSData *data = nil;
+    
+    NSArray *resource_list =
+    [[NSBundle mainBundle] pathsForResourcesOfType:nil
+                                       inDirectory:directory];
+    
+    if ( !resource_list ) {
+        message = [NSString stringWithFormat:@"No resource directory \"%@\"",
+                   directory];
+    }
+    else if ([resource_list count] < 1) {
+        message = [NSString stringWithFormat:@"Empty resource directory \"%@\"",
+                   directory];
+    }
+    else {
+        NSURL *copyURL = [NSURL fileURLWithPath:resource_list[0]];
+        data = [NSData dataWithContentsOfURL:copyURL];
+        if (!data) {
+            message =
+            [NSString stringWithFormat:@"Failed to read data for URL \"%@\"",
+             copyURL];
+        }
+        *filename = [copyURL lastPathComponent];
+    }
+    
+    if (data) {
+        NSError *error;
+        BOOL wroteOK = [GDFileSystem writeToFile:data
+                                            name:*filename
+                                           error:&error];
+        if (!wroteOK) {
+            message = [NSString stringWithFormat:
+                       @"Write failed for \"%@\". %@.", *filename, error ];
+        }
+    }
+    
+    return message;
+}
+                
 +(NSString *)createFileOrError:(NSString *)filename
 {
     return [self createFileOrError:filename content:nil];

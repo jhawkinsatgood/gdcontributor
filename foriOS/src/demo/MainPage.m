@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -182,19 +182,13 @@
         else if ( self.pickList.count < 1 ) {
             // Empty pick list.
             self.pickList = nil;
-            [self demoLogString:@"No providers."];
+            [self demoLogString:@"No options."];
             // demoLogString triggers reloadHTML.
-        }
-        else if (self.pickList.count == 1) {
-            // One item, pick it automatically.
-            self.pickList = nil;
-            [demoi demoPickAndExecute:0];
-            [self reloadHTML];
         }
         else {
             // Actual pick list.
             self.pickFor = parameter_int;
-            [self demoLogFormat:@"Providers: %d", self.pickList.count];
+            [self demoLogFormat:@"Options: %d.\n", self.pickList.count];
             // demoLogFormat triggers reloadHTML.
         }
         return YES;
