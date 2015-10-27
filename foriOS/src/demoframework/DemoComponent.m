@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,9 @@
 #include "DemoComponent.h"
 
 @interface DemoComponent()
-@property (weak, nonatomic)id<DemoUserInterface> demoUserInterface;
 @end
 
 @implementation DemoComponent
-
--(id<DemoUserInterface>)demoUserInterface
-{
-    return _demoUserInterface;
-}
-
--(instancetype)demoSetUserInterface:(id<DemoUserInterface>)demoUserInterface
-{
-    _demoUserInterface = demoUserInterface;
-    return self;
-}
 
 -(void)demoLoad { return; }
 

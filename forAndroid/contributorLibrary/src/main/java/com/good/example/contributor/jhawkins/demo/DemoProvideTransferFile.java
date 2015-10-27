@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,11 +37,29 @@ public class DemoProvideTransferFile extends Component {
 
     public DemoProvideTransferFile() {
         super();
+
         demoExecuteLabel = null;
+
+        // This code is executed before the call to activityInit, and hence
+        // before GD authorisation processing has been initiated. This means
+        // that the listener is always registered before onAuthorized, which is
+        // good because that's the earliest time that a service request could be
+        // sent to the Dispatcher. The Dispatcher has to be instantiated in the
+        // Application subclass.
+        provider = new ProviderTransferFile();
+        provider.addListener(
+                // Instantiate an anonymous inner class that calls out to the
+                // onReceiveMessage in the outer class.
+                new Provider.Listener() {
+                    public Request onReceiveMessage(Request request) {
+                        return DemoProvideTransferFile.this.onReceiveMessage(
+                                request);
+                    }
+                });
     }
     
     /** Illustrative service provider implementation.
-     * This method implements the illustrative handling of the service and is 
+     * This method implements the illustrative handling of the service and is
      * called from an anonymous inner class in the setLogger method, below.
      */
     private Request onReceiveMessage(Request request)
@@ -81,17 +99,15 @@ public class DemoProvideTransferFile extends Component {
             		"demoLoad.");
         }
 
-        provider = new ProviderTransferFile();
-        provider.addListener(
-                // Instantiate an anonymous inner class that calls out to the
-                // onReceiveMessage in the outer class.
-                new Provider.Listener() {
-                    public Request onReceiveMessage(Request request) {
-                        return DemoProvideTransferFile.this.onReceiveMessage(
-                                request);
-                    }
-                });
-        userInterface.demoLog("Ready for: " + provider.getServiceID() + "\n");
+        if (provider == null) {
+            userInterface.demoLog(
+                    "Provider demo unready: " +
+                    this.getClass().getSimpleName() + " class.\n" );
+        }
+        else {
+            userInterface.demoLog(
+                    "Providing: " + provider.getServiceID() + "\n");
+        }
     }
 
 	@Override

@@ -21,20 +21,21 @@
 
 package com.good.example.contributor.jhawkins.gdruntime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.good.gd.GDAndroid;
 import com.good.gd.GDAppEvent;
 import com.good.gd.GDAppEventListener;
 import com.good.gd.GDAppEventType;
 import com.good.gd.GDAppServer;
 import com.good.gd.GDStateListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RuntimeDispatcher implements GDStateListener, GDAppEventListener {
 	// This class is a static singleton.
@@ -77,9 +78,15 @@ public class RuntimeDispatcher implements GDStateListener, GDAppEventListener {
 
 	// Enumeration for state handlers
 	public enum State {
-		AUTHORIZED(false), LOCKED(false), UPDATE_CONFIG(true), 
-		UPDATE_POLICY(true), UPDATE_SERVICES(false), WIPED(false);
-		
+		AUTHORIZED(false),
+		LOCKED(false),
+		UPDATE_CONFIG(true),
+		UPDATE_POLICY(true),
+		UPDATE_SERVICES(false),
+		WIPED(false),
+		UPDATE_DATA_PLAN(false),
+        UPDATE_ENTITLEMENTS(false);
+
 		public final Boolean getsMap;
 		
 		private State(Boolean getsMap) {
@@ -208,10 +215,20 @@ public class RuntimeDispatcher implements GDStateListener, GDAppEventListener {
 
     @Override
     public void onUpdateDataPlan() {
-
+        for( VoidHandler handler: voidListForState(State.UPDATE_DATA_PLAN)) {
+            handler.onReceiveMessage();
+        }
     }
 
-    @Override
+	@Override
+	public void onUpdateEntitlements() {
+        for( VoidHandler handler: voidListForState(State.UPDATE_ENTITLEMENTS)) {
+            handler.onReceiveMessage();
+        }
+
+	}
+
+	@Override
 	public void onWiped() {
 		for( VoidHandler handler: voidListForState(State.WIPED)) {
 			handler.onReceiveMessage();
@@ -325,8 +342,7 @@ public class RuntimeDispatcher implements GDStateListener, GDAppEventListener {
 		return null;
 	}
 	
-	private void invokeHandler(
-			ConfigurationHandler handler, Map<String,Object> map)
+	private void invokeHandler(ConfigurationHandler handler, Map<String,Object> map)
 	{
 		handler.onReceiveMessage( map, JSONStringFrom(map) );
 	}

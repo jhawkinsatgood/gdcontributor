@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		813693DF1BA725C800C63B6D /* GdcRuntimeDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 813693DE1BA725C800C63B6D /* GdcRuntimeDispatcher.m */; };
 		815B33981AE466C700B0322E /* GD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815B33971AE466C700B0322E /* GD.framework */; };
 		815B339A1AE466C700B0322E /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815B33991AE466C700B0322E /* LocalAuthentication.framework */; };
 		815B339C1AE466C700B0322E /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815B339B1AE466C700B0322E /* CoreTelephony.framework */; };
@@ -25,29 +26,31 @@
 		815B33C01AE466C700B0322E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 815B33BE1AE466C700B0322E /* Main.storyboard */; };
 		815B33C21AE466C700B0322E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 815B33C11AE466C700B0322E /* Images.xcassets */; };
 		815B33C51AE466C700B0322E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 815B33C31AE466C700B0322E /* LaunchScreen.xib */; };
-		815B34A21AE472CE00B0322E /* backgrounderlogo_xcf.png in Resources */ = {isa = PBXBuildFile; fileRef = 815B34A11AE472CE00B0322E /* backgrounderlogo_xcf.png */; };
 		815B34A51AE4734900B0322E /* MainPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B34A41AE4734900B0322E /* MainPageViewController.m */; };
 		815B34A91AE476F600B0322E /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 815B34A81AE476F600B0322E /* readme.txt */; };
-		815B35511AE47B7100B0322E /* gdDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B34EC1AE47B7100B0322E /* gdDispatcher.m */; };
-		815B35521AE47B7100B0322E /* gdProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B34EE1AE47B7100B0322E /* gdProvider.m */; };
-		815B35531AE47B7100B0322E /* gdRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B34F01AE47B7100B0322E /* gdRequest.m */; };
 		815B355D1AE47B7100B0322E /* Backgrounder.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B35061AE47B7100B0322E /* Backgrounder.m */; };
 		815B356A1AE47B7100B0322E /* DemoUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B35211AE47B7100B0322E /* DemoUtility.m */; };
 		815B356B1AE47B7100B0322E /* MainPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B35231AE47B7100B0322E /* MainPage.m */; };
 		815B356C1AE47B7100B0322E /* MainPageForGoodDynamics.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B35251AE47B7100B0322E /* MainPageForGoodDynamics.m */; };
 		815B356D1AE47B7100B0322E /* DemoComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B35291AE47B7100B0322E /* DemoComponent.m */; };
-		815B356E1AE47B7100B0322E /* gdRuntimeDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B352D1AE47B7100B0322E /* gdRuntimeDispatcher.m */; };
 		815B356F1AE47B7100B0322E /* PathStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B35301AE47B7100B0322E /* PathStore.m */; };
 		815B35781AE47BE900B0322E /* DemoBackgrounder.m in Sources */ = {isa = PBXBuildFile; fileRef = 815B35771AE47BE900B0322E /* DemoBackgrounder.m */; };
 		815B357A1AE47EA200B0322E /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 815B35791AE47EA200B0322E /* sounds */; };
-		8196832A1AE863AC00E8BF5E /* gdProviderPlayBackgroundSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 819683291AE863AC00E8BF5E /* gdProviderPlayBackgroundSound.m */; };
-		8196832D1AE8650200E8BF5E /* gdRequestPlayBackgroundSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 8196832C1AE8650200E8BF5E /* gdRequestPlayBackgroundSound.m */; };
+		817956171BA72A4A00E366F3 /* GdcServiceDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 817956121BA72A4A00E366F3 /* GdcServiceDispatcher.m */; };
+		817956181BA72A4A00E366F3 /* GdcServiceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 817956141BA72A4A00E366F3 /* GdcServiceProvider.m */; };
+		817956191BA72A4A00E366F3 /* GdcServiceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 817956161BA72A4A00E366F3 /* GdcServiceRequest.m */; };
+		8179561C1BA72C5600E366F3 /* GdcServiceRequestPlayBackgroundSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 8179561B1BA72C5600E366F3 /* GdcServiceRequestPlayBackgroundSound.m */; };
+		8196832A1AE863AC00E8BF5E /* GdcServiceProviderPlayBackgroundSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 819683291AE863AC00E8BF5E /* GdcServiceProviderPlayBackgroundSound.m */; };
 		81978E1D1AE89153002B4E13 /* DemoProvidePlayBackgroundSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 81978E1C1AE89153002B4E13 /* DemoProvidePlayBackgroundSound.m */; };
+		81B8CCE61B8B23BE004D5787 /* backgrounderlogo_xcf.png in Resources */ = {isa = PBXBuildFile; fileRef = 81B8CCE51B8B23BE004D5787 /* backgrounderlogo_xcf.png */; };
 		81C574CE1AE9F53900680EE2 /* Telephony.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C574CD1AE9F53900680EE2 /* Telephony.m */; };
 		81FA60361AE94EAE00EE5C4E /* BackgrounderForGoodDynamics.m in Sources */ = {isa = PBXBuildFile; fileRef = 81FA60351AE94EAE00EE5C4E /* BackgrounderForGoodDynamics.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		813693DD1BA725C800C63B6D /* GdcRuntimeDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GdcRuntimeDispatcher.h; sourceTree = "<group>"; };
+		813693DE1BA725C800C63B6D /* GdcRuntimeDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GdcRuntimeDispatcher.m; sourceTree = "<group>"; };
+		8149D5FA1B7C8D4A00538734 /* DemoPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoPanel.h; sourceTree = "<group>"; };
 		815B33941AE466C700B0322E /* Backgrounder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Backgrounder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		815B33971AE466C700B0322E /* GD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GD.framework; path = System/Library/Frameworks/GD.framework; sourceTree = SDKROOT; };
 		815B33991AE466C700B0322E /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
@@ -68,18 +71,11 @@
 		815B33BA1AE466C700B0322E /* default.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = default.xcconfig; sourceTree = "<group>"; };
 		815B33BC1AE466C700B0322E /* GDAssets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GDAssets.bundle; path = System/Library/Frameworks/GD.framework/Resources/GDAssets.bundle; sourceTree = SDKROOT; };
 		815B33BF1AE466C700B0322E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		815B33C11AE466C700B0322E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		815B33C11AE466C700B0322E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Backgrounder/Images.xcassets; sourceTree = "<group>"; };
 		815B33C41AE466C700B0322E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		815B34A11AE472CE00B0322E /* backgrounderlogo_xcf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = backgrounderlogo_xcf.png; path = ../../../../../ImageResources/Backgrounder/backgrounderlogo_xcf.png; sourceTree = "<group>"; };
 		815B34A31AE4734900B0322E /* MainPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainPageViewController.h; sourceTree = "<group>"; };
 		815B34A41AE4734900B0322E /* MainPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainPageViewController.m; sourceTree = "<group>"; };
 		815B34A81AE476F600B0322E /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = readme.txt; path = Backgrounder/readme.txt; sourceTree = "<group>"; };
-		815B34EB1AE47B7100B0322E /* gdDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gdDispatcher.h; sourceTree = "<group>"; };
-		815B34EC1AE47B7100B0322E /* gdDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gdDispatcher.m; sourceTree = "<group>"; };
-		815B34ED1AE47B7100B0322E /* gdProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gdProvider.h; sourceTree = "<group>"; };
-		815B34EE1AE47B7100B0322E /* gdProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gdProvider.m; sourceTree = "<group>"; };
-		815B34EF1AE47B7100B0322E /* gdRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gdRequest.h; sourceTree = "<group>"; };
-		815B34F01AE47B7100B0322E /* gdRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gdRequest.m; sourceTree = "<group>"; };
 		815B35051AE47B7100B0322E /* Backgrounder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Backgrounder.h; sourceTree = "<group>"; };
 		815B35061AE47B7100B0322E /* Backgrounder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Backgrounder.m; sourceTree = "<group>"; };
 		815B35201AE47B7100B0322E /* DemoUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoUtility.h; sourceTree = "<group>"; };
@@ -92,19 +88,24 @@
 		815B35281AE47B7100B0322E /* DemoComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoComponent.h; sourceTree = "<group>"; };
 		815B35291AE47B7100B0322E /* DemoComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoComponent.m; sourceTree = "<group>"; };
 		815B352A1AE47B7100B0322E /* DemoUserInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoUserInterface.h; sourceTree = "<group>"; };
-		815B352C1AE47B7100B0322E /* gdRuntimeDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gdRuntimeDispatcher.h; sourceTree = "<group>"; };
-		815B352D1AE47B7100B0322E /* gdRuntimeDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gdRuntimeDispatcher.m; sourceTree = "<group>"; };
 		815B352F1AE47B7100B0322E /* PathStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathStore.h; sourceTree = "<group>"; };
 		815B35301AE47B7100B0322E /* PathStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathStore.m; sourceTree = "<group>"; };
 		815B35761AE47BE900B0322E /* DemoBackgrounder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoBackgrounder.h; sourceTree = "<group>"; };
 		815B35771AE47BE900B0322E /* DemoBackgrounder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoBackgrounder.m; sourceTree = "<group>"; };
 		815B35791AE47EA200B0322E /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sounds; path = Backgrounder/sounds; sourceTree = "<group>"; };
-		819683281AE863AC00E8BF5E /* gdProviderPlayBackgroundSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gdProviderPlayBackgroundSound.h; sourceTree = "<group>"; };
-		819683291AE863AC00E8BF5E /* gdProviderPlayBackgroundSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gdProviderPlayBackgroundSound.m; sourceTree = "<group>"; };
-		8196832B1AE8650200E8BF5E /* gdRequestPlayBackgroundSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gdRequestPlayBackgroundSound.h; sourceTree = "<group>"; };
-		8196832C1AE8650200E8BF5E /* gdRequestPlayBackgroundSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gdRequestPlayBackgroundSound.m; sourceTree = "<group>"; };
+		817956111BA72A4A00E366F3 /* GdcServiceDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GdcServiceDispatcher.h; sourceTree = "<group>"; };
+		817956121BA72A4A00E366F3 /* GdcServiceDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GdcServiceDispatcher.m; sourceTree = "<group>"; };
+		817956131BA72A4A00E366F3 /* GdcServiceProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GdcServiceProvider.h; sourceTree = "<group>"; };
+		817956141BA72A4A00E366F3 /* GdcServiceProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GdcServiceProvider.m; sourceTree = "<group>"; };
+		817956151BA72A4A00E366F3 /* GdcServiceRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GdcServiceRequest.h; sourceTree = "<group>"; };
+		817956161BA72A4A00E366F3 /* GdcServiceRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GdcServiceRequest.m; sourceTree = "<group>"; };
+		8179561A1BA72C5600E366F3 /* GdcServiceRequestPlayBackgroundSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GdcServiceRequestPlayBackgroundSound.h; sourceTree = "<group>"; };
+		8179561B1BA72C5600E366F3 /* GdcServiceRequestPlayBackgroundSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GdcServiceRequestPlayBackgroundSound.m; sourceTree = "<group>"; };
+		819683281AE863AC00E8BF5E /* GdcServiceProviderPlayBackgroundSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GdcServiceProviderPlayBackgroundSound.h; sourceTree = "<group>"; };
+		819683291AE863AC00E8BF5E /* GdcServiceProviderPlayBackgroundSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GdcServiceProviderPlayBackgroundSound.m; sourceTree = "<group>"; };
 		81978E1B1AE89153002B4E13 /* DemoProvidePlayBackgroundSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoProvidePlayBackgroundSound.h; sourceTree = "<group>"; };
 		81978E1C1AE89153002B4E13 /* DemoProvidePlayBackgroundSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoProvidePlayBackgroundSound.m; sourceTree = "<group>"; };
+		81B8CCE51B8B23BE004D5787 /* backgrounderlogo_xcf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backgrounderlogo_xcf.png; sourceTree = "<group>"; };
 		81C574CC1AE9F53900680EE2 /* Telephony.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Telephony.h; sourceTree = "<group>"; };
 		81C574CD1AE9F53900680EE2 /* Telephony.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Telephony.m; sourceTree = "<group>"; };
 		81FA60341AE94EAE00EE5C4E /* BackgrounderForGoodDynamics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgrounderForGoodDynamics.h; sourceTree = "<group>"; };
@@ -140,6 +141,9 @@
 				815B35791AE47EA200B0322E /* sounds */,
 				815B34A81AE476F600B0322E /* readme.txt */,
 				815B33AF1AE466C700B0322E /* Backgrounder */,
+				815B33C11AE466C700B0322E /* Images.xcassets */,
+				815B33C31AE466C700B0322E /* LaunchScreen.xib */,
+				815B33BE1AE466C700B0322E /* Main.storyboard */,
 				815B33961AE466C700B0322E /* Frameworks */,
 				815B33951AE466C700B0322E /* Products */,
 			);
@@ -180,11 +184,8 @@
 				815B33B51AE466C700B0322E /* AppDelegate.m */,
 				815B34A31AE4734900B0322E /* MainPageViewController.h */,
 				815B34A41AE4734900B0322E /* MainPageViewController.m */,
-				815B33C11AE466C700B0322E /* Images.xcassets */,
 				815B33BB1AE466C700B0322E /* Resources */,
 				815B33B01AE466C700B0322E /* Supporting Files */,
-				815B33C31AE466C700B0322E /* LaunchScreen.xib */,
-				815B33BE1AE466C700B0322E /* Main.storyboard */,
 			);
 			path = Backgrounder;
 			sourceTree = "<group>";
@@ -202,7 +203,7 @@
 		815B33BB1AE466C700B0322E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				815B34A11AE472CE00B0322E /* backgrounderlogo_xcf.png */,
+				81B8CCE51B8B23BE004D5787 /* backgrounderlogo_xcf.png */,
 				815B33BC1AE466C700B0322E /* GDAssets.bundle */,
 			);
 			name = Resources;
@@ -242,12 +243,12 @@
 		815B34EA1AE47B7100B0322E /* core */ = {
 			isa = PBXGroup;
 			children = (
-				815B34EB1AE47B7100B0322E /* gdDispatcher.h */,
-				815B34EC1AE47B7100B0322E /* gdDispatcher.m */,
-				815B34ED1AE47B7100B0322E /* gdProvider.h */,
-				815B34EE1AE47B7100B0322E /* gdProvider.m */,
-				815B34EF1AE47B7100B0322E /* gdRequest.h */,
-				815B34F01AE47B7100B0322E /* gdRequest.m */,
+				817956111BA72A4A00E366F3 /* GdcServiceDispatcher.h */,
+				817956121BA72A4A00E366F3 /* GdcServiceDispatcher.m */,
+				817956131BA72A4A00E366F3 /* GdcServiceProvider.h */,
+				817956141BA72A4A00E366F3 /* GdcServiceProvider.m */,
+				817956151BA72A4A00E366F3 /* GdcServiceRequest.h */,
+				817956161BA72A4A00E366F3 /* GdcServiceRequest.m */,
 			);
 			path = core;
 			sourceTree = "<group>";
@@ -255,10 +256,10 @@
 		815B34F11AE47B7100B0322E /* specific */ = {
 			isa = PBXGroup;
 			children = (
-				819683281AE863AC00E8BF5E /* gdProviderPlayBackgroundSound.h */,
-				819683291AE863AC00E8BF5E /* gdProviderPlayBackgroundSound.m */,
-				8196832B1AE8650200E8BF5E /* gdRequestPlayBackgroundSound.h */,
-				8196832C1AE8650200E8BF5E /* gdRequestPlayBackgroundSound.m */,
+				8179561A1BA72C5600E366F3 /* GdcServiceRequestPlayBackgroundSound.h */,
+				8179561B1BA72C5600E366F3 /* GdcServiceRequestPlayBackgroundSound.m */,
+				819683281AE863AC00E8BF5E /* GdcServiceProviderPlayBackgroundSound.h */,
+				819683291AE863AC00E8BF5E /* GdcServiceProviderPlayBackgroundSound.m */,
 			);
 			path = specific;
 			sourceTree = "<group>";
@@ -300,6 +301,7 @@
 				815B35281AE47B7100B0322E /* DemoComponent.h */,
 				815B35291AE47B7100B0322E /* DemoComponent.m */,
 				815B352A1AE47B7100B0322E /* DemoUserInterface.h */,
+				8149D5FA1B7C8D4A00538734 /* DemoPanel.h */,
 			);
 			path = demoframework;
 			sourceTree = "<group>";
@@ -307,8 +309,8 @@
 		815B352B1AE47B7100B0322E /* gdruntime */ = {
 			isa = PBXGroup;
 			children = (
-				815B352C1AE47B7100B0322E /* gdRuntimeDispatcher.h */,
-				815B352D1AE47B7100B0322E /* gdRuntimeDispatcher.m */,
+				813693DD1BA725C800C63B6D /* GdcRuntimeDispatcher.h */,
+				813693DE1BA725C800C63B6D /* GdcRuntimeDispatcher.m */,
 			);
 			path = gdruntime;
 			sourceTree = "<group>";
@@ -348,8 +350,8 @@
 		815B338C1AE466C700B0322E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
-				ORGANIZATIONNAME = jhawkins;
+				LastUpgradeCheck = 0640;
+				ORGANIZATIONNAME = "Good Technology";
 				TargetAttributes = {
 					815B33931AE466C700B0322E = {
 						CreatedOnToolsVersion = 6.3;
@@ -357,7 +359,7 @@
 				};
 			};
 			buildConfigurationList = 815B338F1AE466C700B0322E /* Build configuration list for PBXProject "Backgrounder" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -382,10 +384,10 @@
 				815B34A91AE476F600B0322E /* readme.txt in Resources */,
 				815B33C51AE466C700B0322E /* LaunchScreen.xib in Resources */,
 				815B357A1AE47EA200B0322E /* sounds in Resources */,
+				81B8CCE61B8B23BE004D5787 /* backgrounderlogo_xcf.png in Resources */,
 				815B33C21AE466C700B0322E /* Images.xcassets in Resources */,
 				815B33BD1AE466C700B0322E /* GDAssets.bundle in Resources */,
 				815B33C01AE466C700B0322E /* Main.storyboard in Resources */,
-				815B34A21AE472CE00B0322E /* backgrounderlogo_xcf.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,25 +398,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				817956181BA72A4A00E366F3 /* GdcServiceProvider.m in Sources */,
 				815B356F1AE47B7100B0322E /* PathStore.m in Sources */,
+				817956171BA72A4A00E366F3 /* GdcServiceDispatcher.m in Sources */,
 				81C574CE1AE9F53900680EE2 /* Telephony.m in Sources */,
-				815B35511AE47B7100B0322E /* gdDispatcher.m in Sources */,
 				815B356D1AE47B7100B0322E /* DemoComponent.m in Sources */,
 				81FA60361AE94EAE00EE5C4E /* BackgrounderForGoodDynamics.m in Sources */,
 				815B35781AE47BE900B0322E /* DemoBackgrounder.m in Sources */,
 				815B33B61AE466C700B0322E /* AppDelegate.m in Sources */,
-				815B356E1AE47B7100B0322E /* gdRuntimeDispatcher.m in Sources */,
 				815B33B31AE466C700B0322E /* main.m in Sources */,
+				813693DF1BA725C800C63B6D /* GdcRuntimeDispatcher.m in Sources */,
 				815B34A51AE4734900B0322E /* MainPageViewController.m in Sources */,
-				815B35521AE47B7100B0322E /* gdProvider.m in Sources */,
 				815B356B1AE47B7100B0322E /* MainPage.m in Sources */,
-				8196832D1AE8650200E8BF5E /* gdRequestPlayBackgroundSound.m in Sources */,
-				8196832A1AE863AC00E8BF5E /* gdProviderPlayBackgroundSound.m in Sources */,
+				8196832A1AE863AC00E8BF5E /* GdcServiceProviderPlayBackgroundSound.m in Sources */,
 				815B356A1AE47B7100B0322E /* DemoUtility.m in Sources */,
 				81978E1D1AE89153002B4E13 /* DemoProvidePlayBackgroundSound.m in Sources */,
 				815B355D1AE47B7100B0322E /* Backgrounder.m in Sources */,
-				815B35531AE47B7100B0322E /* gdRequest.m in Sources */,
 				815B356C1AE47B7100B0322E /* MainPageForGoodDynamics.m in Sources */,
+				817956191BA72A4A00E366F3 /* GdcServiceRequest.m in Sources */,
+				8179561C1BA72C5600E366F3 /* GdcServiceRequestPlayBackgroundSound.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,6 +429,7 @@
 				815B33BF1AE466C700B0322E /* Base */,
 			);
 			name = Main.storyboard;
+			path = Backgrounder;
 			sourceTree = "<group>";
 		};
 		815B33C31AE466C700B0322E /* LaunchScreen.xib */ = {
@@ -435,6 +438,7 @@
 				815B33C41AE466C700B0322E /* Base */,
 			);
 			name = LaunchScreen.xib;
+			path = Backgrounder;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -477,7 +481,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -517,7 +521,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;

@@ -23,5 +23,6 @@
 #import "Backgrounder.h"
 
 @interface BackgrounderForGoodDynamics : NSObject
-+(BOOL)gdStartPath:(NSString *)path logger:(backgrounder_logger)logger;
++(BOOL)gdStartRecording:(NSString *)path in:(Backgrounder *)backgrounder;
++(BOOL)gdStartPlayback:(NSString *)path in:(Backgrounder *)backgrounder;
 @end

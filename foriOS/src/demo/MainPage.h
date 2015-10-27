@@ -23,6 +23,7 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIWebView.h>
 #import "DemoUserInterface.h"
+#import "DemoPanel.h"
 
 @interface MainPage : NSObject <UIWebViewDelegate, DemoUserInterface>
 @property (weak, nonatomic, setter = setUIWebView:) UIWebView *uiWebView;
@@ -31,10 +32,8 @@
 @property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString *information;
 
--(instancetype)addDemoClass:(Class)class;
--(instancetype)addDemoClasses:(NSArray *)classes;
--(instancetype)addDemoClassNamed:(char *)demo;
--(instancetype)load;
+@property (strong, nonatomic) NSString *segueToSecond;
+
 +(NSString *)commandHTML:(NSString *)command
                    label:(NSString *)label
                  control:(NSString *)control;
@@ -43,4 +42,10 @@
                    value:(int)value;
 +(NSString *)commandHTML:(NSString *)command
                    label:(NSString *)label;
+
++(NSString *)HTMLForDemoPanel:(DemoPanel *)demoPanel
+                asPanelNumber:(NSNumber *)panelNumber;
+
++(NSString *)HTMLForDemoPanelItem:(DemoPanelItem *)demoPanelItem
+                       asLocation:(NSArray *)location;
 @end

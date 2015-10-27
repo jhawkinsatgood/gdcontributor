@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,9 +34,9 @@ NS_ENUM(NSInteger, DemoAuthenticationTokenState) {
 
 @interface DemoAuthenticationToken()
 @property (nonatomic) GDSocket* gdSocket;
-@property (strong, nonatomic) GDUtility *gdUtility;
+@property (nonatomic) GDUtility *gdUtility;
 @property (assign) enum DemoAuthenticationTokenState state;
-@property (strong, nonatomic) GDAppServer *gdAppServer0;
+@property (nonatomic) GDAppServer *gdAppServer0;
 @end
 
 @implementation DemoAuthenticationToken
@@ -65,7 +65,8 @@ NS_ENUM(NSInteger, DemoAuthenticationTokenState) {
     }
     
     if (self.gdAppServer0 == nil) {
-        [DEMOUI demoLogString:@"No server addresses configured.\n"];
+        [self.demoUserInterface
+         demoLogString:@"No server addresses configured.\n"];
         return nil;
     }
 
@@ -79,39 +80,44 @@ NS_ENUM(NSInteger, DemoAuthenticationTokenState) {
                           cStringUsingEncoding:NSASCIIStringEncoding];
     int port = [self.gdAppServer0.port intValue];
     
-    [DEMOUI demoLogFormat:@"Socket creation \"%s\" %d ...\n", server, port];
+    id<DemoUserInterface> demoUI = self.demoUserInterface;
+    [demoUI demoLogFormat:@"Socket creation \"%s\" %d ...\n", server, port];
     self.gdSocket = [[GDSocket alloc] init:server
                                     onPort:port
                                  andUseSSL:NO];
     self.gdSocket.delegate = self;
-    [DEMOUI demoLogString:@"Socket connect...\n"];
+    [demoUI demoLogString:@"Socket connect...\n"];
     [self.gdSocket connect];
-    [DEMOUI demoLogString:@"Socket connecting...\n"];
+    [demoUI demoLogString:@"Socket connecting...\n"];
 
     return nil;
 }
 
 -(void)onOpen:(id)socket_id {
-    [DEMOUI demoLogString:@"Socket open. Loading stream...\n"];
+    id<DemoUserInterface> demoUI = self.demoUserInterface;
+    
+    [demoUI demoLogString:@"Socket open. Loading stream...\n"];
     GDSocket *socket = (GDSocket *)socket_id;
     [socket.writeStream write:"CHALLENGE\n"];
-    [DEMOUI demoLogString:@"Socket stream writing...\n"];
+    [demoUI demoLogString:@"Socket stream writing...\n"];
     self.state = DemoAuthenticationTokenAwaitingChallenge;
     [socket write];
-    [DEMOUI demoLogString:@"Socket stream written.\n"];
+    [demoUI demoLogString:@"Socket stream written.\n"];
 }
 
 -(void)onRead:(id) socket_id {
-    [DEMOUI demoLogString:@"DemoAuthenticationToken socket reading...\n"];
+    id<DemoUserInterface> demoUI = self.demoUserInterface;
+
+    [demoUI demoLogString:@"DemoAuthenticationToken socket reading...\n"];
     GDSocket *socket = (GDSocket *) socket_id;
     NSString *str = [socket.readStream unreadDataAsString];
-    [DEMOUI demoLogFormat:@"Received data \"%@\"\n", str];
+    [demoUI demoLogFormat:@"Received data \"%@\"\n", str];
     
     switch (self.state) {
         case DemoAuthenticationTokenNone:
         case DemoAuthenticationTokenFailed:
         case DemoAuthenticationTokenOK:
-            [DEMOUI demoLogString:@"Not expecting to receive.\n"];
+            [demoUI demoLogString:@"Not expecting to receive.\n"];
             break;
             
         case DemoAuthenticationTokenAwaitingChallenge: {
@@ -133,11 +139,11 @@ NS_ENUM(NSInteger, DemoAuthenticationTokenState) {
             // Check if the first character is O from OK
             if ([[str substringToIndex:1] isEqualToString:@"O"]) {
                 self.state = DemoAuthenticationTokenOK;
-                [DEMOUI demoLogString:@"Token verified.\n"];
+                [demoUI demoLogString:@"Token verified.\n"];
             }
             else {
                 self.state = DemoAuthenticationTokenFailed;
-                [DEMOUI demoLogString:@"Token rejected.\n"];
+                [demoUI demoLogString:@"Token rejected.\n"];
             }
             break;
     }
@@ -147,37 +153,69 @@ NS_ENUM(NSInteger, DemoAuthenticationTokenState) {
     // been received would go here. For the demo, assume all data is received in
     // a single read.
     if (allDataHasBeenReceived) {
-        [DEMOUI demoLogString:@"Socket disconnecting...\n"];
+        [demoUI demoLogString:@"Socket disconnecting...\n"];
         [socket disconnect];
     }
 }
 
 -(void)onClose:(id) socket {
-    [DEMOUI demoLogString:@"DemoAuthenticationToken socket closed.\n"];
+    [self.demoUserInterface
+     demoLogString:@"DemoAuthenticationToken socket closed.\n"];
 }
 
-- (void)onErr:(int)error inSocket:(id) socket {
-    [DEMOUI demoLogFormat:@"DemoAuthenticationToken socket error %d\n", error];
+- (void)onErr:(int)errorInt inSocket:(id) socket
+{
+    NSString *errorStr = nil;
+    switch (errorInt) {
+        case GDSocketErrorNone:
+            errorStr = @" GDSocketErrorNone";
+            break;
+        case GDSocketErrorNetworkUnvailable:
+            errorStr = @" GDSocketErrorNetworkUnvailable";
+            break;
+        case GDSocketErrorServiceTimeOut:
+            errorStr = @" GDSocketErrorServiceTimeOut";
+            break;
+    }
+    
+    if (errorStr) {
+        [self.demoUserInterface demoLogFormat:
+         @"DemoAuthenticationToken socket error %d%@\n", errorInt, errorStr];
+    }
+    else {
+        [self.demoUserInterface demoLogFormat:
+         @"DemoAuthenticationToken socket error %d\n%d %@\n%d %@\n%d %@\n",
+         errorInt,
+         GDSocketErrorNone, @"GDSocketErrorNone",
+         GDSocketErrorNetworkUnvailable, @"GDSocketErrorNetworkUnvailable",
+         GDSocketErrorServiceTimeOut, @"GDSocketErrorServiceTimeOut"
+         ];
+        
+    }
 }
 
 - (void)onGDAuthTokenSuccess:(NSString *)gdAuthToken
 {
-    [DEMOUI demoLogFormat:@"onGDAuthTokenSuccess \"%@\"\n", gdAuthToken];
+    id<DemoUserInterface> demoUI = self.demoUserInterface;
+
+    [demoUI demoLogFormat:@"onGDAuthTokenSuccess \"%@\"\n", gdAuthToken];
     [self.gdSocket.writeStream write:"TOKEN\n"];
     // To force an error, uncomment the following line.
     // gdAuthToken = [gdAuthToken substringFromIndex:2];
     [self.gdSocket.writeStream
      write:[gdAuthToken cStringUsingEncoding:NSASCIIStringEncoding]];
     [self.gdSocket.writeStream write:"\n\n"];
-    [DEMOUI demoLogString:@"Socket stream writing...\n"];
+    [demoUI demoLogString:@"Socket stream writing...\n"];
     self.state = DemoAuthenticationTokenAwaitingVerification;
     [self.gdSocket write];
-    [DEMOUI demoLogString:@"Socket stream written.\n"];
+    [demoUI demoLogString:@"Socket stream written.\n"];
 }
 
 - (void)onGDAuthTokenFailure:(NSError *)err
 {
-    [DEMOUI demoLogFormat:@"onGDAuthTokenFailure \"%@\"\n", err];
+    [self.demoUserInterface
+     demoLogFormat:@"onGDAuthTokenFailure \"%@\"\n", err];
+
     self.state = DemoAuthenticationTokenNone;
 }
 

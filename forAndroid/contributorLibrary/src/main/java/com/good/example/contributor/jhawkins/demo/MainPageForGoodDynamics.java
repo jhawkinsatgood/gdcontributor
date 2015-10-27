@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,15 +46,44 @@ public class MainPageForGoodDynamics {
 	}
 
 	private Boolean setUpDone = false;
-	WebView webView = null;
-	Activity activity = null;
+	private WebView webView = null;
+	private Activity activity = null;
+    private Boolean hasAuthorized = false;
 	
 	public Boolean isSetUp() { return setUpDone; }
 
-	public void setUp(WebView webView, Activity activity)
+    public MainPageForGoodDynamics setWebView(WebView webView) {
+        this.webView  = webView;
+        didAuthorize();
+        return this;
+    }
+
+    public MainPageForGoodDynamics setActivity(Activity activity) {
+        this.activity  = activity;
+        didAuthorize();
+        return this;
+    }
+
+    private void didAuthorize()
+    {
+        if (this.hasAuthorized &&
+            this.webView != null &&
+            this.activity != null
+        ) {
+            MainPage mainPage = MainPage.getInstance();
+            if (mainPage.getInformation() == null) {
+                mainPage.setInformation(
+                        GDAndroid.getVersion() + " " +
+                                GDAndroid.getInstance().getApplicationId() );
+            }
+            mainPage.setWebView(this.webView).setActivity(this.activity).load();
+        }
+
+        // If any of the conditions are not met, do nothing.
+    }
+
+	public void setUp()
 	{
-    	this.webView = webView;
-    	this.activity = activity;
     	if (!setUpDone) {
     		RuntimeDispatcher.getInstance().addEventHandler(
     			GDAppEventType.GDAppEventAuthorized,
@@ -63,16 +92,8 @@ public class MainPageForGoodDynamics {
     				@Override
     				public void onReceiveMessage(GDAppEvent event) {
     					Log.i(TAG, "setUp onReceiveMessage()");
-    					MainPage mainPage = MainPage.getInstance();
-    					if (mainPage.getInformation() == null) {
-    						mainPage.setInformation(
-    								GDAndroid.getVersion() + " " + 
-    										GDAndroid.getInstance().getApplicationId() );
-    					}
-    					mainPage
-    					.setWebView(MainPageForGoodDynamics.this.webView)
-    					.setActivity(MainPageForGoodDynamics.this.activity)
-    					.load();
+                        MainPageForGoodDynamics.this.hasAuthorized = true;
+                        MainPageForGoodDynamics.this.didAuthorize();
     				}
     			});
     	}

@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,6 @@
 #import "DemoComponent.h"
 #import "DemoComponent-protocol.h"
 
-/** awkward\{class DemoConsumeRequestLinks}drawka
- * First line in ld.
- */
 @interface DemoConsumeRequestLinks : DemoComponent <DemoComponent>
-
-    /* Next line is a docco leader with an extra space. */
-    /**  \{class DemoConsumeRequestLinks}
-     */
-
-    /* Next line is an empty docco comment. */
-    /** */
-
-    /** Brief description with no full stop
-     *  so it goes on.
-     * This is the description that is long.
-     */
-
-    /** "Brief" description that is long enough to wrap onto a secone line, to test indentationNext.
-     * OK?
-     */
 
 @end

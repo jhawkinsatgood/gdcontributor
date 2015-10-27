@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,26 @@
 #import <Foundation/Foundation.h>
 #import "DemoComponent-protocol.h"
 
+#import <UIKit/UIKit.h>
+
+@class DemoPanel;
+
 @protocol DemoUserInterface <NSObject>
+-(void)segueToSecondViewFrom:(DemoPanel *)sender;
+
 -(void)demoLogString:(NSString *)message;
 -(void)demoLogFormat:(NSString *)format, ...;
 -(void)demoEdit:(NSString *)content savingTo:(id<DemoComponent>)saver;
+
+-(instancetype)addDemoClass:(Class)class;
+-(instancetype)addDemoClasses:(NSArray *)classes;
+-(instancetype)addDemoClassNamed:(char *)demo;
+
+-(instancetype)load;
+
+-(void)addDemoPanelClass:(Class)class;
+-(void)addDemoPanelClasses:(NSArray *)classes;
+-(void)addDemoPanelClassNamed:(char *)className;
+
+-(void)refresh;
 @end

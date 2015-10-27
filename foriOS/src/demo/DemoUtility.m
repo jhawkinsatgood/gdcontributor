@@ -20,7 +20,10 @@
  */
 
 #import "DemoUtility.h"
+#import <GD/GDFileManager.h>
+
 #import <GD/GDFileSystem.h>
+
 #import <GD/GDAppServer.h>
 
 @interface DemoUtility()
@@ -37,17 +40,55 @@
 
 +(NSString *)simpleDate
 {
-    return [NSDateFormatter localizedStringFromDate:[NSDate new]
+    // [NSDate new] gives the time now.
+    return [self simpleDate:[NSDate new]];
+}
+
++(NSString *)simpleDate:(NSDate *)nsDate
+{
+    return [NSDateFormatter localizedStringFromDate:nsDate
                                           dateStyle:NSDateFormatterMediumStyle
                                           timeStyle:NSDateFormatterLongStyle];
 }
 
-+(NSString *)createFileOrError:(NSString *)filename content:(NSString *)content
++(NSString *)documentsDirectory
+{
+    NSArray *candidates =
+    NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                        NSUserDomainMask,
+                                        YES);
+    
+    if (candidates.count >= 1) {
+        return candidates[0];
+    }
+    
+    return nil;
+}
+
++(NSString *)pathForStub:(NSString *)stub
+{
+    return [self pathForStub:stub extension:nil];
+}
+
++(NSString *)pathForStub:(NSString *)stub extension:(NSString *)extension
+{
+    if (extension) {
+        stub = [stub stringByAppendingPathExtension:extension];
+    }
+    NSMutableArray *pathComponents = [NSMutableArray arrayWithObject:stub];
+    
+    // Next line will crash if there isn't a valid documents directory.
+    [pathComponents insertObject:[self documentsDirectory] atIndex:0];
+
+    return [NSString pathWithComponents:pathComponents];
+}
+
++(NSString *)createFileOrError:(NSString *)path content:(NSString *)content
 {
     NSString *message = nil;
     
     if (!content) {
-        NSString *extension = [[filename pathExtension] lowercaseString];
+        NSString *extension = [[path pathExtension] lowercaseString];
         if ([extension isEqualToString:@"txt"]) {
             content = [NSString stringWithFormat:@"%@\n%@",
                        [self basicContent], [self simpleDate]];
@@ -70,13 +111,13 @@
         NSData *contentAsData = [content dataUsingEncoding:NSASCIIStringEncoding
                                       allowLossyConversion:YES];
         
-        NSError *error;
-        BOOL wroteOK = [GDFileSystem writeToFile:contentAsData
-                                            name:filename
-                                           error:&error];
+        BOOL wroteOK =
+        [[GDFileManager defaultManager] createFileAtPath:path
+                                                contents:contentAsData
+                                              attributes:nil];
         if (!wroteOK) {
             message = [NSString stringWithFormat:
-                       @"Write failed for \"%@\". %@.", filename, error ];
+                       @"Create failed for \"%@\".", path];
         }
     }
     
@@ -113,30 +154,30 @@
     }
     
     if (data) {
-        NSError *error;
-        BOOL wroteOK = [GDFileSystem writeToFile:data
-                                            name:*filename
-                                           error:&error];
+        BOOL wroteOK = [[GDFileManager defaultManager]
+                        createFileAtPath:*filename
+                        contents:data
+                        attributes:nil];
         if (!wroteOK) {
             message = [NSString stringWithFormat:
-                       @"Write failed for \"%@\". %@.", *filename, error ];
+                       @"Create failed for \"%@\".", *filename];
         }
     }
     
     return message;
 }
                 
-+(NSString *)createFileOrError:(NSString *)filename
++(NSString *)createFileOrError:(NSString *)path
 {
-    return [self createFileOrError:filename content:nil];
+    return [self createFileOrError:path content:nil];
 }
 
-+(NSString *)createFilesOrError:(NSArray *)filenames
++(NSString *)createFilesOrError:(NSArray *)paths
 {
     NSMutableString *ret = [NSMutableString new];
     BOOL allOK = YES;
-    for (int i=0; i<filenames.count; i++) {
-        NSString *error = [self createFileOrError:filenames[i]];
+    for (int i=0; i<paths.count; i++) {
+        NSString *error = [self createFileOrError:paths[i]];
         if (error != nil) {
             [ret appendString:error];
             [ret appendString:@"\n"];
@@ -150,10 +191,10 @@
 +(NSString *)createDirectoryOrError:(NSString *)path
 {
     NSError *error = nil;
-    BOOL dirOK = [GDFileSystem createDirectoryAtPath:path
-                         withIntermediateDirectories:YES
-                                          attributes:nil
-                                               error:&error];
+    BOOL dirOK = [[GDFileManager defaultManager] createDirectoryAtPath:path
+                                           withIntermediateDirectories:YES
+                                                            attributes:nil
+                                                                 error:&error];
     if (dirOK) return nil;
     return [NSString stringWithFormat:
             @"Failed to create directory \"%@\". %@.\n", path, error];
@@ -161,20 +202,48 @@
 
 +(NSString *)statFile:(NSString *)filepath
 {
-    NSError *err = nil;
-    GDFileStat myStat;
-    BOOL statOK = [GDFileSystem getFileStat:filepath to:&myStat error:&err];
-    if (statOK) {
-        NSDate *lastModified =
-        [NSDate dateWithTimeIntervalSince1970:myStat.lastModifiedTime];
+    NSError *error = nil;
+    NSDictionary *attributes =
+    [[GDFileManager defaultManager] attributesOfItemAtPath:filepath
+                                                     error:&error];
+
+    if (attributes != nil) {
+        NSDate *lastModifiedDate = [attributes fileModificationDate];
+        if (!lastModifiedDate) {
+            lastModifiedDate = [attributes fileCreationDate];
+        }
+
+        NSString *lastModified;
+        if (lastModifiedDate) {
+            lastModified = [self simpleDate:lastModifiedDate];
+        }
+        else {
+            // getFileStat is deprecated, like the rest of GDFileSystem. It
+            // seems that files received as attachments to a service request
+            // don't get proper stats, which looks like a bug. For now, to get
+            // around that, use the deprecated function, which does give proper
+            // stats.
+            GDFileStat myStat;
+            BOOL statOK = [GDFileSystem getFileStat:filepath
+                                                 to:&myStat
+                                              error:&error];
+            if (statOK) {
+                lastModifiedDate =
+                [NSDate dateWithTimeIntervalSince1970:myStat.lastModifiedTime];
+                lastModified = [self simpleDate:lastModifiedDate];
+            }
+            else {
+                lastModified = [error description];
+            }
+        }
         
         return [NSString
-                stringWithFormat:@"Length: %lld, last modified time: %@.\n",
-                myStat.fileLen, [lastModified description]];
+                stringWithFormat:@"Length: %lld, Modified: %@.\n",
+                [attributes fileSize], lastModified];
     }
     else {
         return [NSString stringWithFormat:@"Failed to stat file \"%@\". %@.\n",
-                filepath, err];
+                filepath, error];
     }
 }
 
@@ -182,7 +251,8 @@
 {
     NSError *err = nil;
     // Use the simple read-at-once API, rather than the stream-based API.
-    NSData *readResult = [GDFileSystem readFromFile:filepath error:&err];
+    NSData *readResult = [[GDFileManager defaultManager]
+                          contentsAtPath:filepath];
     if (readResult) {
         NSMutableString *ret = [NSMutableString new];
         char *reader = (char *)[readResult bytes];
@@ -217,6 +287,29 @@
         ret[i] = dictionary;
     }
     return ret;
+}
+
++(NSString *)numberedFileIn:(NSString *)directory
+                       stub:(NSString *)stub
+                  extension:(NSString *)extension
+{
+    for (int suffix=1; suffix < 1000; suffix++) {
+        // Set path to a candidate value.
+        NSString *path =
+        [[NSString pathWithComponents:
+          @[ directory, [stub stringByAppendingFormat:@"%04d", suffix] ]
+          ] stringByAppendingPathExtension:extension];
+        
+        BOOL isDirectory = NO;
+        if (![[GDFileManager defaultManager] fileExistsAtPath:path
+                                                  isDirectory:&isDirectory]) {
+            // Path doesn't exist, we have a winner.
+            return path;
+        }
+
+        // Path exists already, go around again.
+    }
+    return nil;
 }
 
 @end

@@ -20,7 +20,7 @@
  */
 
 #import "DemoTicker.h"
-#import "gdRuntimeDispatcher.h"
+#import "GdcRuntimeDispatcher.h"
 
 @interface DemoTicker()
 @property (weak, nonatomic) NSTimer *timer;
@@ -41,7 +41,7 @@
 -(NSArray *)demoExecuteOrPickList
 {
     if (self.timer == nil) {
-        [DEMOUI demoLogString:@"Starting ticker "];
+        [self.demoUserInterface demoLogString:@"Starting ticker "];
         self.dotCount = 0;
         self.timer =
         [NSTimer scheduledTimerWithTimeInterval:10.0
@@ -54,28 +54,26 @@
     else {
         [self.timer invalidate];
         self.timer = nil;
-        [DEMOUI demoLogString:@" Ticker stopped.\n"];
+        [self.demoUserInterface demoLogString:@" Ticker stopped.\n"];
     }
 
     
-    [[gdRuntimeDispatcher sharedInstance]
+    [[GdcRuntimeDispatcher sharedInstance]
      addObserverForEventType:GDAppEventNotAuthorized
-     usingBlock:GDRUNTIMEOBSERVER(event) {
+     usingBlock:GDC_RUNTIME_OBSERVER(event) {
          if (event.code == GDErrorIdleLockout) {
-             [DEMOUI demoLogString:@" Idle Lock "];
+             [self.demoUserInterface demoLogString:@" Idle Lock "];
          }
      }];
-
-    
     
     return nil;
 }
 
 -(void)printDot:(NSTimer *)timer
 {
-    [DEMOUI demoLogString:@"."];
+    [self.demoUserInterface demoLogString:@"."];
     if (++self.dotCount % 10 == 0) {
-        [DEMOUI demoLogString:@"\n"];
+        [self.demoUserInterface demoLogString:@"\n"];
     }
 }
 

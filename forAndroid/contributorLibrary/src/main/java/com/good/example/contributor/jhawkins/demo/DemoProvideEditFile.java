@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,11 +55,11 @@ public class DemoProvideEditFile extends Component {
     /** Illustrative service provider.
      * Call this method to set an illustrative implementation of the service,
      * which logs a stat of the received file and the initial bytes.
-     *
-     * @param myLogger Logger instance for printing messages. The logMessage 
-     *                 method of the instance will be invoked a number of times 
-     *                 every time a service request is received. It will be passed a
-     *                 message to log on each invocation.
+     * 
+     * @param myLogger Logger instance for printing messages. The logMessage
+     * method of the instance will be invoked a number of times every time a
+     * service request is received. It will be passed a message to log on each
+     * invocation.
      */
     public void demoLoad()
     {
@@ -138,7 +138,7 @@ public class DemoProvideEditFile extends Component {
     }
     
     /** Illustrative service provider implementation.
-     * This method implements the illustrative handling of the service and is 
+     * This method implements the illustrative handling of the service and is
      * called from an anonymous inner class in the setLogger method, below.
      */
     public Request onReceiveMessage( Request request )

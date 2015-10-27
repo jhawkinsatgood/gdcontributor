@@ -21,7 +21,8 @@ THE SOFTWARE.
 */
 
 include \
-    ':AppKinetics Workflow', ':Enterprise', ':contributorLibrary', ':gdHandheld'
+    ':AppKinetics Workflow', ':Enterprise', ':Media Capture', \
+    ':contributorLibrary', ':gdHandheld'
 
 project(':AppKinetics Workflow').projectDir =
     new File('samples/AppKinetics Workflow')
@@ -29,9 +30,12 @@ project(':AppKinetics Workflow').projectDir =
 project(':Enterprise').projectDir =
     new File('samples/Enterprise')
 
+project(':Media Capture').projectDir =
+    new File('samples/Media Capture')
+
 def good_dynamics_path = "com.good.gd/dynamics_sdk/libs"
 
 println "Good Dynamics library path '" + good_dynamics_path + "'"
 
 project(':gdHandheld').projectDir =
-        new File(good_dynamics_path  + '/handheld/gd')
+    new File(good_dynamics_path  + '/handheld/gd')

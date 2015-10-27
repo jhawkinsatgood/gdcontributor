@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@
  */
 
 #import "DemoApplicationPolicies.h"
-#import "gdRuntimeDispatcher.h"
+#import "GdcRuntimeDispatcher.h"
 
 @implementation DemoApplicationPolicies
 
@@ -35,14 +35,15 @@
 
 -(NSArray *)demoExecuteOrPickList
 {
-    [[gdRuntimeDispatcher sharedInstance]
+    [[GdcRuntimeDispatcher sharedInstance]
      addObserverForApplicationPolicy:
-     GDCONFIGURATIONOBSERVER(policyDictionary, policyString) {
-         [DEMOUI demoLogFormat:@"Policy dictionary: %@\nPolicy string: %@\n",
+     GDC_CONFIGURATION_OBSERVER(policyDictionary, policyString) {
+         [self.demoUserInterface
+          demoLogFormat:@"Policy dictionary: %@\nPolicy string: %@\n",
           policyDictionary, policyString];
      }
      andInvokeNow:YES];
-    [DEMOUI demoLogString:@"Ready for policy updates.\n"];
+    [self.demoUserInterface demoLogString:@"Ready for policy updates.\n"];
 
     return nil;
 }

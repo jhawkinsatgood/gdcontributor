@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +24,8 @@
 #import "DemoComponent-protocol.h"
 
 /** Consume the Send Email service for diagnostic and illustration purposes.
- * This class illustrates use of the ConsumeSendEmail class.
+ * This class illustrates use of the GdcServiceRequestSendEmail class.
  */
 @interface DemoConsumeSendEmail : DemoComponent <DemoComponent>
-//-(instancetype) sendRequest;
-/**< Send an illustrative service request.
- * Call this function to send a service request that illustrates use of all
- * parameter keys, and includes some file attachments.
- *
- * Files for attachment are created on-the-fly.
- *
- * \return NSString containing a transcript of the service request.
- */
 
 @end

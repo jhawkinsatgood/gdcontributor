@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,7 @@
 
 package com.good.example.contributor.jhawkins.appkinetics.core;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import android.util.Log;
 
 import com.good.gd.icc.GDICCForegroundOptions;
 import com.good.gd.icc.GDService;
@@ -31,13 +30,16 @@ import com.good.gd.icc.GDServiceErrorCode;
 import com.good.gd.icc.GDServiceException;
 import com.good.gd.icc.GDServiceListener;
 
+import java.util.ArrayList;
+
 public class Dispatcher implements GDServiceListener {
+    private static final String TAG = "Dispatcher";
     ArrayList<Provider> providers;
 
     private static Dispatcher _instance = null;
     private Dispatcher() {
         super();
-        providers = new ArrayList<Provider>(0);
+        providers = new ArrayList<>(0);
     }
     public static Dispatcher getInstance() {
         if (null == _instance) {
@@ -46,21 +48,31 @@ public class Dispatcher implements GDServiceListener {
         return _instance;
     }
 
-    // Register a service provider instance.
+    // Register a service provider instance. A null parameter can be passed,
+    // which forces registration of the Dispatcher instance with the GD Runtime.
     public Dispatcher register(Provider provider)
     {
-        providers.add(provider);
+        String provider_string = "null";
+        if (provider != null) {
+            providers.add(provider);
+            provider_string = "\"" + provider.toString() + "\"";
+        }
         // After adding the instance to the map, ensure that this class is the 
         // registered listener.
         try {
+            Log.d(TAG, "GDService.setServiceListener(this)");
             GDService.setServiceListener(this);
         } catch (GDServiceException e) {
             throw new Error(
                     "Failed to set dispatcher as GD Service Listener " +
-                    "when registering \"" + provider.toString() + "\". " + 
+                    "when registering " + provider_string + ". " +
                     e.getMessage());
         }
         return this;
+    }
+    public Dispatcher register()
+    {
+        return register(null);
     }
     
     private class ProviderLookup {
@@ -71,18 +83,16 @@ public class Dispatcher implements GDServiceListener {
     private ProviderLookup lookupProvider(Request request)
     {
         ProviderLookup ret = new ProviderLookup();
-        Iterator<Provider> iterator = providers.iterator();
-        while(iterator.hasNext()) {
-            Provider provideri = iterator.next();
-            
+        for (Provider provideri: providers) {
+
             // Find out what matches
-            Boolean matchedServiceID = 
+            Boolean matchedServiceID =
                     provideri.getServiceID().equals(request.getServiceID());
-            Boolean matchedServiceVersion = 
+            Boolean matchedServiceVersion =
                     provideri.getServiceVersion().equals(
                             request.getServiceVersion());
             Boolean matchedMethod = false;
-            for( String method: provideri.getDefinedMethods()) {
+            for(String method: provideri.getDefinedMethods()) {
                 if (method.equals(request.getMethod())) {
                     matchedMethod = true;
                     break;
@@ -92,7 +102,7 @@ public class Dispatcher implements GDServiceListener {
             // Decision tree.
             // If serviceID didn't match then move to the next provider.
             if (!matchedServiceID) continue;
-            
+
             // If serviceID matched but something else didn't, set a candidate
             // error code and move to the next provider.
             // A later provider could match, in which case the candidate error
@@ -126,12 +136,32 @@ public class Dispatcher implements GDServiceListener {
     }
 
     @Override
-    public void onReceiveMessage(
-            String application,
-            String service, String version, String method,
-            Object params, String[] attachments,
-            String requestID)
+    public void onReceivingAttachments(String application,
+                                       int numberOfAttachments,
+                                       String requestID )
     {
+
+    }
+
+    @Override
+    public void onReceivingAttachmentFile(String application,
+                                          String path,
+                                          long size,
+                                          String requestID )
+    {
+
+    }
+
+    @Override
+    public void onReceiveMessage(String application,
+                                 String service,
+                                 String version,
+                                 String method,
+                                 Object params,
+                                 String[] attachments,
+                                 String requestID )
+    {
+        Log.d(TAG, "onReceiveMessage(...)");
         // Create a Request object from the received values.
         Request request = new Request()
         .setApplication(application)
@@ -160,14 +190,13 @@ public class Dispatcher implements GDServiceListener {
     }
 
     @Override
-    public void onMessageSent(
-            String application,
-            String requestID,
-            String[] attachments) {
+    public void onMessageSent(String application,
+                              String requestID,
+                              String[] attachments )
+    {
         // This callback is invoked to notify the application that a service 
         // response has been sent. This module doesn't take any action at that
         // time.
-        return;
     }
 
 }

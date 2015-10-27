@@ -26,26 +26,37 @@
 typedef void (backgrounder_logger)(NSString *message);
 
 typedef int (backgrounder_opener)
-(void *inParameter, AudioFileID *audioFileID,
+(void *inParameter, AudioStreamBasicDescription *asbd, AudioFileID *audioFileID,
 void **audioFileClientData, backgrounder_logger logger);
 
 typedef int (backgrounder_closer)
-(void *inParameter, void *audioFileClientData);
+(void *inParameter, void *audioFileClientData, backgrounder_logger logger);
+
+// Following might be able to replace backgrouner_logger, above, in due course.
+typedef void (^BackgrounderLogger) (NSString *message);
+#define BACKGROUNDER_LOGGER(MESSAGE) ^void (NSString *MESSAGE)
 
 @interface Backgrounder : NSObject
 
 +(instancetype)sharedInstance;
 
++(NSURL *)URLForRecording:(char *)inParameter;
+
+// Cannot have properties with function type, so this has a setter.
 -(void)setLogger:(backgrounder_logger)logger;
 
 int logOSError(NSString *preamble,
                OSStatus osStatus,
                backgrounder_logger logger);
 
--(BOOL)startPath:(NSString *)path;
--(BOOL)startWithOpen:(backgrounder_opener *)open_func
-               close:(backgrounder_closer *)close_func
-           parameter:(void *)parameter;
+-(BOOL)startPlaybackPath:(NSString *)path;
+-(BOOL)startRecordingPath:(NSString *)path;
+-(BOOL)startPlaybackWithOpen:(backgrounder_opener *)open_func
+                       close:(backgrounder_closer *)close_func
+                   parameter:(void *)parameter;
+-(BOOL)startRecordingWithOpen:(backgrounder_opener *)open_func
+                        close:(backgrounder_closer *)close_func
+                    parameter:(void *)parameter;
 
 -(BOOL)stop;
 

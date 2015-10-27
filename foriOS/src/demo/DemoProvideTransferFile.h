@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,25 +24,7 @@
 #import "DemoComponent-protocol.h"
 
 /** Provide the Transfer File service for diagnostic and illustration purposes.
- * This class illustrates use of the ProvideTransferFile class.
+ * This class illustrates use of the GdcServuceProviderTransferFile class.
  */
 @interface DemoProvideTransferFile : DemoComponent <DemoComponent>
-
-//- (void) setReceiver:(DemoProvideTransferFileLogger)logger;
-/**< Illustrative service provider.
- * Call this function to set an illustrative implementation of the service,
- * which logs a stat of the received file and the initial bytes.
- *
- * \param logger Code block to print log messages. The block must conform to the
- *               Logger type. The block will be invoked a number of times every
- *               time a service request is received. It will be passed a
- *               messsage to log as an NSString * parameter on each invocation.
- */
-
-//- (void) setReceiver;
-/**< Illustrative service provider that utilises NSLog.
- * Calling this function is equivalent to calling setReceiver: with a block that
- * utilises NSLog to print messages.
- */
-
 @end

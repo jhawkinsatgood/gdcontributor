@@ -28,6 +28,7 @@
 #import "DemoConsumeTransferFile.h"
 #import "DemoProvideTransferFile.h"
 #import "DemoConsumeOpenHTTPURL.h"
+#import "DemoKeychainUtility.h"
 #import "DemoTicker.h"
 
 @implementation AppDelegate
@@ -36,6 +37,9 @@
 {
     GDiOS *gdRuntime = [GDiOS sharedInstance];
 
+    NSLog(@"Good Dynamics activation status: %@.\n",
+          gdRuntime.isActivated ? @"Activated" : @"Not activated" );
+    
     MainPage *mainPage = [[MainPageForGoodDynamics sharedInstance] mainPage];
     
     // The mainBundle is used for a string that is passed to the user interface
@@ -48,6 +52,7 @@
                                 [DemoConsumeOpenHTTPURL class],
                                 [DemoProvideTransferFile class],
                                 [DemoTicker class] ]];
+    [mainPage addDemoPanelClasses:@[ [DemoKeychainUtility class] ]];
     
 	self.window = [gdRuntime getWindow];
     

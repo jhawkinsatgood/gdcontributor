@@ -24,6 +24,7 @@ THE SOFTWARE.
     package="com.good.example.contributor.jhawkins.appkineticsworkflow" >
 
     <application
+        android:name=".Application"
         android:allowBackup="false"
         android:icon="@drawable/workflowicon144x144_xcf"
         android:label="@string/app_name"
@@ -34,7 +35,6 @@ THE SOFTWARE.
             android:alwaysRetainTaskState="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

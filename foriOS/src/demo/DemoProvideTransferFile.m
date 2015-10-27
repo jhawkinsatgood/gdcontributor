@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,12 @@
  */
 
 #import "DemoProvideTransferFile.h"
-#import "gdProviderTransferFile.h"
+#import "GdcServiceProviderTransferFile.h"
 #import "DemoUtility.h"
 #import <GD/GDFileSystem.h>
 
 @interface DemoProvideTransferFile ()
-@property (nonatomic, strong) gdProviderTransferFile *provider;
+@property (nonatomic) GdcServiceProviderTransferFile *provider;
 @end
 
 @implementation DemoProvideTransferFile
@@ -46,31 +46,38 @@
 
 -(void)demoLoad
 {
-    if (!DEMOUI) {
+    if (!self.demoUserInterface) {
         assert("DemoProvideTransferFile set up attempted without user "
                "interface. Call demoSetUserInterface before demoSetUp.");
     }
     if (self.provider == nil) {
-        self.provider = [gdProviderTransferFile new];
+        self.provider = [GdcServiceProviderTransferFile new];
     }
-    [self.provider addListener:^(gdRequest *request) {
+    
+    DemoProvideTransferFile * __weak weakSelf = self;
+
+    [self.provider addListener:^(GdcServiceRequest *request) {
         NSString *filename = [request getAttachment];
 
-        [DEMOUI demoLogFormat:@"%@ received file \"%@\"...\n",
+        [weakSelf.demoUserInterface
+         demoLogFormat:@"%@ received file \"%@\"...\n",
          NSStringFromClass([DemoProvideTransferFile class]), filename];
         
         // Stat the file ...
-        [DEMOUI demoLogFormat:@"%@", [DemoUtility statFile:filename]];
+        [weakSelf.demoUserInterface
+         demoLogFormat:@"%@", [DemoUtility statFile:filename]];
         
         // ... and then dump some initial bytes. The program assumes
         // the bytes are printable, by demoLogFormat.
-        [DEMOUI demoLogFormat:@"%@", [DemoUtility byteDump:filename]];
+        [weakSelf.demoUserInterface
+         demoLogFormat:@"%@", [DemoUtility byteDump:filename]];
         
         // Enable propagation, in case there is another listener.
         return request;
     }];
 
-    [DEMOUI demoLogFormat:@"Ready for: %@\n", [self.provider getServiceID]];
+    [self.demoUserInterface
+     demoLogFormat:@"Ready for: %@\n", self.provider.serviceID];
 }
 
 @end

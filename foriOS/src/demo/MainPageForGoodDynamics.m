@@ -22,7 +22,7 @@
 #import "MainPageForGoodDynamics.h"
 #import <GD/GDiOS.h>
 
-#import "gdRuntimeDispatcher.h"
+#import "GdcRuntimeDispatcher.h"
 
 @interface MainPageForGoodDynamics()
 -(instancetype)init;
@@ -120,9 +120,9 @@
     }
 
     if (!self.hasSetUp) {
-        [[gdRuntimeDispatcher sharedInstance]
+        [[GdcRuntimeDispatcher sharedInstance]
          addObserverForEventType:GDAppEventAuthorized
-         usingBlock:GDRUNTIMEOBSERVER(event) {
+         usingBlock:GDC_RUNTIME_OBSERVER(event) {
              // This event is also received when the user unlocks the UI after
              // inactivity. There is no need to re-run didAuthorize at that time
              // or at any time.

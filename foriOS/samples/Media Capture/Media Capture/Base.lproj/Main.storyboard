@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="GbA-ll-bHb">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--Main Page View Controller-->
+        <scene sceneID="R6d-Kx-Tnt">
+            <objects>
+                <viewController id="GbA-ll-bHb" customClass="MainPageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ac8-x9-FwA"/>
+                        <viewControllerLayoutGuide type="bottom" id="BFE-PR-OgL"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="NCg-zQ-qL3">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qTM-eP-haS">
+                                <rect key="frame" x="-4" y="0.0" width="608" height="620"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="qTM-eP-haS" firstAttribute="leading" secondItem="NCg-zQ-qL3" secondAttribute="leadingMargin" constant="-20" id="6N0-ht-nCM"/>
+                            <constraint firstItem="qTM-eP-haS" firstAttribute="top" secondItem="Ac8-x9-FwA" secondAttribute="bottom" constant="-20" id="GVE-Sr-5dq"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="qTM-eP-haS" secondAttribute="trailing" constant="-20" id="Ryc-hT-EtG"/>
+                            <constraint firstItem="BFE-PR-OgL" firstAttribute="top" secondItem="qTM-eP-haS" secondAttribute="bottom" constant="-20" id="iQA-1Z-I1w"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="uiWebView" destination="qTM-eP-haS" id="zur-Ei-Zxf"/>
+                        <segue destination="6Xi-Jf-xY7" kind="presentation" identifier="toSecond" modalTransitionStyle="crossDissolve" id="7fx-Dv-SVd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="R6L-SR-i8z" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-405" y="-641"/>
+        </scene>
+        <!--Cam View Controller-->
+        <scene sceneID="N81-yX-7V2">
+            <objects>
+                <viewController id="6Xi-Jf-xY7" customClass="AVCamViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="cM4-Cr-gBQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="0Jk-Sm-BN6"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uXW-Ih-C9H">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mgS-rx-sAy" customClass="AVCamPreviewView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zWx-jv-ImD">
+                                        <rect key="frame" x="264" y="550" width="72" height="30"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="72" id="8DT-ZL-p3H"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="Photo">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="snapStillImage:" destination="6Xi-Jf-xY7" eventType="touchUpInside" id="r6C-5V-DfE"/>
+                                        </connections>
+                                    </button>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e4O-JH-8wC">
+                                        <rect key="frame" x="356" y="550" width="72" height="30"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="72" id="mlS-jX-d8A"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="Camera">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="changeCamera:" destination="6Xi-Jf-xY7" eventType="touchUpInside" id="9Fc-ws-hrw"/>
+                                        </connections>
+                                    </button>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LFg-BI-5xf">
+                                        <rect key="frame" x="172" y="550" width="72" height="30"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="72" id="Sou-L9-mPg"/>
+                                            <constraint firstAttribute="height" constant="30" id="awc-3V-4Xk"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="Record">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="toggleMovieRecording:" destination="6Xi-Jf-xY7" eventType="touchUpInside" id="1Lv-4M-gB6"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstItem="e4O-JH-8wC" firstAttribute="bottom" secondItem="zWx-jv-ImD" secondAttribute="bottom" id="6Mu-ZJ-LF8"/>
+                                    <constraint firstItem="zWx-jv-ImD" firstAttribute="centerX" secondItem="mgS-rx-sAy" secondAttribute="centerX" id="6cI-OX-UyU"/>
+                                    <constraint firstItem="LFg-BI-5xf" firstAttribute="bottom" secondItem="zWx-jv-ImD" secondAttribute="bottom" id="Urc-rT-9Ib"/>
+                                    <constraint firstItem="e4O-JH-8wC" firstAttribute="leading" secondItem="zWx-jv-ImD" secondAttribute="trailing" constant="20" id="Zho-1d-86P"/>
+                                    <constraint firstItem="LFg-BI-5xf" firstAttribute="top" secondItem="zWx-jv-ImD" secondAttribute="top" id="bu7-sH-GYA"/>
+                                    <constraint firstAttribute="bottom" secondItem="LFg-BI-5xf" secondAttribute="bottom" constant="20" symbolic="YES" id="dHb-fJ-PqL"/>
+                                    <constraint firstItem="zWx-jv-ImD" firstAttribute="leading" secondItem="LFg-BI-5xf" secondAttribute="trailing" constant="20" id="lMV-Y7-8Wr"/>
+                                    <constraint firstItem="zWx-jv-ImD" firstAttribute="top" secondItem="e4O-JH-8wC" secondAttribute="top" id="lO6-Qe-fgJ"/>
+                                </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="nXY-CF-Mqs" appends="YES" id="tff-Ud-KfZ"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="mgS-rx-sAy" secondAttribute="trailing" id="5SD-QG-pKg"/>
+                            <constraint firstItem="mgS-rx-sAy" firstAttribute="leading" secondItem="uXW-Ih-C9H" secondAttribute="leading" id="XqO-c0-tQt"/>
+                            <constraint firstAttribute="bottom" secondItem="mgS-rx-sAy" secondAttribute="bottom" id="eky-ai-oTb"/>
+                            <constraint firstItem="mgS-rx-sAy" firstAttribute="top" secondItem="uXW-Ih-C9H" secondAttribute="top" id="yyU-57-9ZJ"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <connections>
+                        <outlet property="cameraButton" destination="e4O-JH-8wC" id="yUJ-cP-Oyc"/>
+                        <outlet property="previewView" destination="mgS-rx-sAy" id="9rm-Vm-Vvg"/>
+                        <outlet property="recordButton" destination="LFg-BI-5xf" id="lz4-6o-egX"/>
+                        <outlet property="stillButton" destination="zWx-jv-ImD" id="fdO-fV-Nzw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GGQ-iS-Dbf" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="nXY-CF-Mqs">
+                    <connections>
+                        <action selector="focusAndExposeTap:" destination="6Xi-Jf-xY7" id="tQ6-jq-0Vo"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="-405" y="43"/>
+        </scene>
+    </scenes>
+</document>

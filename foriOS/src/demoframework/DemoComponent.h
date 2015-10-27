@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,7 @@
 #import "DemoUserInterface.h"
 
 @interface DemoComponent : NSObject
--(instancetype)demoSetUserInterface:(id<DemoUserInterface>)demoUserInterface;
--(id<DemoUserInterface>)demoUserInterface;
+@property (weak, nonatomic) id<DemoUserInterface> demoUserInterface;
 
 -(void)demoLoad;
 -(void)demoPickAndExecute:(int)pickListIndex;
@@ -33,5 +32,3 @@
 -(NSString *)demoGetSwitchLabel;
 -(void)demoSwitch;
 @end
-
-#define DEMOUI [super demoUserInterface]

@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +20,10 @@
  */
 
 #import "DemoConsumeOpenHTTPURL.h"
-#import "gdRequestOpenHTTPURL.h"
+#import "GdcServiceRequestOpenHTTPURL.h"
 
 @interface DemoConsumeOpenHTTPURL()
-@property (strong, nonatomic) gdRequestOpenHTTPURL *request;
+@property (nonatomic) GdcServiceRequestOpenHTTPURL *request;
 @end
 
 @implementation DemoConsumeOpenHTTPURL
@@ -38,7 +38,7 @@
 }
 
 -(NSArray *)demoExecuteOrPickList {
-    if (self.request == nil) { self.request = [gdRequestOpenHTTPURL new]; }
+    if (self.request == nil) { self.request = [GdcServiceRequestOpenHTTPURL new]; }
     return [[self.request queryProviders] getProviderNames];
 }
 
@@ -51,7 +51,7 @@
     // The above returns a message if there is an error in the send. The
     // message is also inserted into the Request object, which is dumped
     // below, so there is no need to log it additionally.
-    if (DEMOUI) [DEMOUI demoLogFormat:@"Sent request:%@\n", self.request];
+    [self.demoUserInterface demoLogFormat:@"Sent request:%@\n", self.request];
 
     return;
 }

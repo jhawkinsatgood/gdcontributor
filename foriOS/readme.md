@@ -31,16 +31,16 @@ Component                       | Version
 --------------------------------|--------
 Xcode                           | 6.4
 iOS simulator running iOS       | 8.4
-iPad device running iOS         | 8.4
-Good Dynamics SDK for iOS       | 1.11.4388
-Good Control and Good Proxy     | 1.10.47
-OS X                            | 10.10.4
+iPad device running iOS         | 9.0.2
+Good Dynamics SDK for iOS       | 2.0.4420
+Good Control and Good Proxy     | 2.0.3
+OS X                            | 10.10.5
 
 The AppKinetics Workflow application has been tested with the following service
 provider applications.
 
 Service       | Provider    | Version
 --------------|-------------|----------
-Send Email    | Good Work   | 1.4.2.402
-Open HTTP URL | Good Access | 2.4.0.703
-Transfer File | Good Share  | 3.1.12
+Send Email    | Good Work   | 1.5.2.459
+Open HTTP URL | Good Access | 2.4.4.740
+Transfer File | Good Share  | 3.2.0

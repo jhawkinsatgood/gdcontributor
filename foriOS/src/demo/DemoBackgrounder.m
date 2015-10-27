@@ -22,15 +22,20 @@
 #import "DemoBackgrounder.h"
 #import "DemoUtility.h"
 
+
 #import "Backgrounder.h"
+#import "BackgrounderForGoodDynamics.h"
 #import "Telephony.h"
 
 #include <GD/GD_C_FileSystem.h>
 #include <stdio.h>
 
+#include <GD/GDFileSystem.h>
+
 @interface ListItem: NSObject
 @property (strong, nonatomic) NSString *label;
 @property (strong, nonatomic) NSString *path;
+@property (assign, nonatomic) BOOL secure;
 @end
 
 @implementation ListItem
@@ -39,13 +44,15 @@
 {
     self.label = label;
     self.path = nil;
+    self.secure = NO;
     return self;
 }
 
 -(instancetype)initWithPath:(NSString *)path
 {
     self.path = path;
-    self.label = [[NSURL fileURLWithPath:self.path] lastPathComponent];
+    self.label = [[NSURL fileURLWithPath:path] lastPathComponent];
+    self.secure = NO;
     return self;
 }
 
@@ -83,7 +90,10 @@ static id<DemoUserInterface> demoBackgrounderUserInterface = nil;
     NSMutableArray *list_builder = [NSMutableArray new];
     [list_builder
      addObjectsFromArray:@[[[ListItem alloc] initWithLabel:@"Stop"],
-                           [[ListItem alloc] initWithLabel:@"Telephony"] ]];
+                           [[ListItem alloc] initWithLabel:@"Telephony"],
+                           [[ListItem alloc] initWithLabel:@"Record native"]
+                           ]
+     ];
     
     NSArray *resource_list =
     [[NSBundle mainBundle] pathsForResourcesOfType:nil
@@ -91,6 +101,13 @@ static id<DemoUserInterface> demoBackgrounderUserInterface = nil;
     for (NSString *listi in resource_list) {
         [list_builder addObject:[[ListItem alloc] initWithPath:listi]];
     }
+    
+    [list_builder addObject:[[ListItem alloc]
+                             initWithPath:[[Backgrounder
+                                            URLForRecording:"blahfile"]
+                                           path]
+                             ]
+     ];
     
     self.list = [NSArray arrayWithArray:list_builder];
     
@@ -114,15 +131,27 @@ static void demoBackgrounderLogger(NSString *message)
 -(void)demoPickAndExecute:(int)pickListIndex
 {
     ListItem *listItem = (ListItem *)[self.list objectAtIndex:pickListIndex];
-    demoBackgrounderUserInterface = DEMOUI;
+    demoBackgrounderUserInterface = self.demoUserInterface;
+
+    [[Backgrounder sharedInstance] setLogger:demoBackgrounderLogger];
+
     if ([listItem hasPath]) {
-        demoBackgrounderLogger(@"Setting logger.\n");
-        [[Backgrounder sharedInstance] setLogger:demoBackgrounderLogger];
-        [[Backgrounder sharedInstance] startPath:listItem.path];
+        if (listItem.secure) {
+            [BackgrounderForGoodDynamics
+             gdStartPlayback:listItem.path
+             in:[Backgrounder sharedInstance]];
+        }
+        else {
+            [[Backgrounder sharedInstance] startPlaybackPath:listItem.path];
+        }
     }
     else {
         if ([listItem.label isEqualToString:@"Stop"]) {
             [[Backgrounder sharedInstance] stop];
+            self.telephony = nil;
+        }
+        else if ([listItem.label isEqualToString:@"Record native"]) {
+            [[Backgrounder sharedInstance] startRecordingPath:@"blahfile"];
             self.telephony = nil;
         }
         else if ([listItem.label isEqualToString:@"Telephony"]) {
@@ -133,10 +162,9 @@ static void demoBackgrounderLogger(NSString *message)
             }];
         }
         else {
-            if (DEMOUI) {
-                [DEMOUI demoLogFormat:@"Unknown Backgrounder command \"%@\".\n",
-                 listItem.label];
-            }
+            [self.demoUserInterface
+             demoLogFormat:@"Unknown Backgrounder command \"%@\".\n",
+             listItem.label];
         }
     }
     

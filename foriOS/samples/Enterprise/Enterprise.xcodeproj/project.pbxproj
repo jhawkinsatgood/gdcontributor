@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,7 @@
 		8175955D19B63B0200696F2B /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8175955C19B63B0200696F2B /* readme.txt */; };
 		8179811F1B46A47200A16065 /* GD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8179811E1B46A47200A16065 /* GD.framework */; };
 		817981211B46A49500A16065 /* GDAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 817981201B46A49500A16065 /* GDAssets.bundle */; };
+		81A1D9FC1B9A701F0092CD78 /* GdcRuntimeDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 81A1D9FB1B9A701F0092CD78 /* GdcRuntimeDispatcher.m */; };
 		81AB431B19B611A000BC9E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB431A19B611A000BC9E53 /* Foundation.framework */; };
 		81AB431D19B611A000BC9E53 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB431C19B611A000BC9E53 /* CoreGraphics.framework */; };
 		81AB431F19B611A000BC9E53 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB431E19B611A000BC9E53 /* UIKit.framework */; };
@@ -35,7 +36,6 @@
 		81AB444119B61AE000BC9E53 /* MainPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 81AB440919B61AE000BC9E53 /* MainPage.m */; };
 		81AB444219B61AE000BC9E53 /* MainPageForGoodDynamics.m in Sources */ = {isa = PBXBuildFile; fileRef = 81AB440B19B61AE000BC9E53 /* MainPageForGoodDynamics.m */; };
 		81AB444319B61AE000BC9E53 /* DemoComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 81AB440F19B61AE000BC9E53 /* DemoComponent.m */; };
-		81AB444519B61AE000BC9E53 /* gdRuntimeDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 81AB441519B61AE000BC9E53 /* gdRuntimeDispatcher.m */; };
 		81AB444B19B61C1800BC9E53 /* enterpriselogo_xcf.png in Resources */ = {isa = PBXBuildFile; fileRef = 81AB444A19B61C1800BC9E53 /* enterpriselogo_xcf.png */; };
 		81AB444E19B61C9200BC9E53 /* MainPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81AB444D19B61C9200BC9E53 /* MainPageViewController.m */; };
 		81CA69621A7806EA00EBF7D1 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CA69611A7806EA00EBF7D1 /* LocalAuthentication.framework */; };
@@ -52,6 +52,9 @@
 		8175955C19B63B0200696F2B /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = readme.txt; path = Enterprise/readme.txt; sourceTree = "<group>"; };
 		8179811E1B46A47200A16065 /* GD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GD.framework; path = System/Library/Frameworks/GD.framework; sourceTree = SDKROOT; };
 		817981201B46A49500A16065 /* GDAssets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GDAssets.bundle; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GD.framework/Resources/GDAssets.bundle; sourceTree = DEVELOPER_DIR; };
+		81A1D9F91B9A6FFF0092CD78 /* DemoPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoPanel.h; sourceTree = "<group>"; };
+		81A1D9FA1B9A701F0092CD78 /* GdcRuntimeDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GdcRuntimeDispatcher.h; sourceTree = "<group>"; };
+		81A1D9FB1B9A701F0092CD78 /* GdcRuntimeDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GdcRuntimeDispatcher.m; sourceTree = "<group>"; };
 		81AB431719B611A000BC9E53 /* Enterprise.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Enterprise.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB431A19B611A000BC9E53 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		81AB431C19B611A000BC9E53 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -84,8 +87,6 @@
 		81AB440E19B61AE000BC9E53 /* DemoComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoComponent.h; sourceTree = "<group>"; };
 		81AB440F19B61AE000BC9E53 /* DemoComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoComponent.m; sourceTree = "<group>"; };
 		81AB441019B61AE000BC9E53 /* DemoUserInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoUserInterface.h; sourceTree = "<group>"; };
-		81AB441419B61AE000BC9E53 /* gdRuntimeDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gdRuntimeDispatcher.h; sourceTree = "<group>"; };
-		81AB441519B61AE000BC9E53 /* gdRuntimeDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gdRuntimeDispatcher.m; sourceTree = "<group>"; };
 		81AB444A19B61C1800BC9E53 /* enterpriselogo_xcf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enterpriselogo_xcf.png; sourceTree = "<group>"; };
 		81AB444C19B61C9200BC9E53 /* MainPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainPageViewController.h; sourceTree = "<group>"; };
 		81AB444D19B61C9200BC9E53 /* MainPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainPageViewController.m; sourceTree = "<group>"; };
@@ -235,6 +236,7 @@
 		81AB440C19B61AE000BC9E53 /* demoframework */ = {
 			isa = PBXGroup;
 			children = (
+				81A1D9F91B9A6FFF0092CD78 /* DemoPanel.h */,
 				81AB440D19B61AE000BC9E53 /* DemoComponent-protocol.h */,
 				81AB440E19B61AE000BC9E53 /* DemoComponent.h */,
 				81AB440F19B61AE000BC9E53 /* DemoComponent.m */,
@@ -246,8 +248,8 @@
 		81AB441119B61AE000BC9E53 /* gdruntime */ = {
 			isa = PBXGroup;
 			children = (
-				81AB441419B61AE000BC9E53 /* gdRuntimeDispatcher.h */,
-				81AB441519B61AE000BC9E53 /* gdRuntimeDispatcher.m */,
+				81A1D9FA1B9A701F0092CD78 /* GdcRuntimeDispatcher.h */,
+				81A1D9FB1B9A701F0092CD78 /* GdcRuntimeDispatcher.m */,
 			);
 			path = gdruntime;
 			sourceTree = "<group>";
@@ -279,10 +281,10 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0640;
-				ORGANIZATIONNAME = jhawkins;
+				ORGANIZATIONNAME = "Good Technology";
 			};
 			buildConfigurationList = 81AB431219B611A000BC9E53 /* Build configuration list for PBXProject "Enterprise" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -323,10 +325,10 @@
 			files = (
 				81AB443919B61AE000BC9E53 /* DemoApplicationPolicies.m in Sources */,
 				81AB444E19B61C9200BC9E53 /* MainPageViewController.m in Sources */,
-				81AB444519B61AE000BC9E53 /* gdRuntimeDispatcher.m in Sources */,
 				81AB444319B61AE000BC9E53 /* DemoComponent.m in Sources */,
 				81AB444119B61AE000BC9E53 /* MainPage.m in Sources */,
 				81AB444019B61AE000BC9E53 /* DemoUtility.m in Sources */,
+				81A1D9FC1B9A701F0092CD78 /* GdcRuntimeDispatcher.m in Sources */,
 				8108267619B8C8740022EE85 /* DemoApplicationConfiguration.m in Sources */,
 				8108267919B9FFAB0022EE85 /* DemoAuthenticationToken.m in Sources */,
 				81AB434119B611A000BC9E53 /* AppDelegate.m in Sources */,

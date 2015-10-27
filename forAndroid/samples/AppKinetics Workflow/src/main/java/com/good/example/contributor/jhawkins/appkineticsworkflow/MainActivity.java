@@ -21,32 +21,31 @@
 
 package com.good.example.contributor.jhawkins.appkineticsworkflow;
 
-import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Color;
-
-import com.good.gd.GDAndroid;
-import com.good.gd.widget.GDWebView;
+import android.os.Bundle;
+import android.util.Log;
+import android.webkit.WebView;
 
 import com.good.example.contributor.jhawkins.demo.DemoConsumeOpenHTTPURL;
 import com.good.example.contributor.jhawkins.demo.DemoConsumeSendEmail;
 import com.good.example.contributor.jhawkins.demo.DemoConsumeTransferFile;
 import com.good.example.contributor.jhawkins.demo.DemoProvideTransferFile;
 import com.good.example.contributor.jhawkins.demo.MainPageForGoodDynamics;
+import com.good.gd.GDAndroid;
 
-/** Entry point activity which will start authorization with Good Dynamics
- * and once done launch the application UI.
+/* Entry point activity which will start authorization with Good Dynamics and
+ * once done launch the application UI.
  */
 public class MainActivity extends Activity {
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
-        GDWebView webView = (GDWebView) findViewById(R.id.webView);
-
-        MainPageForGoodDynamics mainPageForGD = MainPageForGoodDynamics.getInstance();
+        MainPageForGoodDynamics mainPageForGD =
+                MainPageForGoodDynamics.getInstance();
 
         if (!mainPageForGD.isSetUp()) {
             // Set up the UI, but don't load any demos yet, because GD demos won't load
@@ -65,14 +64,27 @@ public class MainActivity extends Activity {
         // -   Causes the demos to be loaded, if they haven't loaded already.
         // -   Sets the information line to display some GD-specific values.
         // Those things only happen when the application authorizes.
-        mainPageForGD.setUp(webView, this);
+        // It is necessary to set the GD authorization listener before kicking
+        // off authorization processing.
+        mainPageForGD.setUp();
 
+        // Configure the GD UI and kick off authorization processing.
+        // Note that this is after setting up the MainPageForGoodDynamics
+        // instance as the listener for authorization events.
         GDAndroid.getInstance().configureUI(
-                getResources().getDrawable(R.drawable.workflowlogo_xcf),
-                getResources().getDrawable(R.drawable.workflowlogo_xcf),
-                Color.BLACK );
-
+                getResources().getDrawable(R.drawable.workflowlogo_xcf, null),
+                getResources().getDrawable(R.drawable.workflowlogo_xcf, null),
+                Color.BLACK);
+        Log.d(TAG, "GDAndroid.getInstance().activityInit(this)" );
         GDAndroid.getInstance().activityInit(this);
+
+        // Finish the rest of the layout and UI loading.
+        setContentView(R.layout.activity_main);
+
+        // The id.webView control is actually a GDWebView, so cast it here.
+        // GDWebView is a subclass of WebView.
+        mainPageForGD.setWebView((WebView) findViewById(R.id.webView));
+        mainPageForGD.setActivity(this);
     }
 
     @Override

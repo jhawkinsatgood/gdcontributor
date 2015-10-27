@@ -33,6 +33,7 @@
 				<string>com.good.example.contributor.jhawkins.enterprise.sc</string>
 				<string>com.good.example.contributor.jhawkins.enterprise.sc2.1.0.0.0</string>
 				<string>com.good.gd.discovery</string>
+                <string>com.good.gd.discovery.enterprise</string>
 			</array>
 		</dict>
 	</array>
@@ -44,7 +45,7 @@
 	<string>1.0.0.0</string>
 	<key>GDConsoleLogger</key>
 	<array>
-		<string>GDFilterNone</string>
+		<string>GDFilterAll</string>
 	</array>
 	<key>GDLibraryMode</key>
 	<string>GDEnterprise</string>

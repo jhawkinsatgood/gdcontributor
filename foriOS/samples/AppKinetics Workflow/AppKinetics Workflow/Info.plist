@@ -46,6 +46,7 @@
 				<string>com.good.example.contributor.jhawkins.appkineticsworkflow.sc2</string>
 				<string>com.good.example.contributor.jhawkins.appkineticsworkflow.sc2.1.0.0.0</string>
 				<string>com.good.gd.discovery</string>
+				<string>com.good.gd.discovery.enterprise</string>
 			</array>
 		</dict>
 	</array>

@@ -22,14 +22,14 @@
 #import <GD/GDFileSystem.h>
 
 #import "DemoProvidePlayBackgroundSound.h"
-#import "gdProviderPlayBackgroundSound.h"
+#import "GdcServiceProviderPlayBackgroundSound.h"
 
 #import "BackgrounderForGoodDynamics.h"
 
 #import "DemoUtility.h"
 
 @interface DemoProvidePlayBackgroundSound ()
-@property (nonatomic, strong) gdProviderPlayBackgroundSound *provider;
+@property (nonatomic, strong) GdcServiceProviderPlayBackgroundSound *provider;
 @end
 
 @implementation DemoProvidePlayBackgroundSound
@@ -58,31 +58,36 @@ static void demoProvidePlayBackgroundSoundLogger(NSString *message)
 
 -(void)demoLoad
 {
-    if (!DEMOUI) {
+    if (!self.demoUserInterface) {
         assert("DemoProvidePlayBackgroundSound set up attempted without user "
                "interface. Call demoSetUserInterface before demoSetUp.");
     }
+    
+    DemoProvidePlayBackgroundSound * __weak weakSelf = self;
+
     if (self.provider == nil) {
-        self.provider = [gdProviderPlayBackgroundSound new];
+        self.provider = [GdcServiceProviderPlayBackgroundSound new];
     }
-    demoProvidePlayBackgroundSoundUserInterface = DEMOUI;
+    demoProvidePlayBackgroundSoundUserInterface = self.demoUserInterface;
     demoProvidePlayBackgroundSoundLogger(@"Setting logger.\n");
     [[Backgrounder sharedInstance]
      setLogger:demoProvidePlayBackgroundSoundLogger];
-    [self.provider addListener:^(gdRequest *request) {
+    [self.provider addListener:^(GdcServiceRequest *request) {
         NSString *inFilename = [request getAttachment];
-        [DEMOUI demoLogFormat:@"%@ received file \"%@\"...\n",
+        [weakSelf.demoUserInterface demoLogFormat:@"%@ received file \"%@\"...\n",
          NSStringFromClass([DemoProvidePlayBackgroundSound class]), inFilename];
         
         // Stat the file ...
-        [DEMOUI demoLogFormat:@"%@", [DemoUtility statFile:inFilename]];
+        [weakSelf.demoUserInterface
+         demoLogFormat:@"%@", [DemoUtility statFile:inFilename]];
         
         // ... and then dump some initial bytes. The program assumes
         // the bytes are printable, by demoLogFormat.
-        [DEMOUI demoLogFormat:@"%@", [DemoUtility byteDump:inFilename]];
+        [weakSelf.demoUserInterface
+         demoLogFormat:@"%@", [DemoUtility byteDump:inFilename]];
         
         NSURL *inURL = [NSURL fileURLWithPath:inFilename];
-        NSString *outDirectory = [request getApplication];
+        NSString *outDirectory = request.application;
 
         NSError *error;
         BOOL outIsDir;
@@ -95,7 +100,7 @@ static void demoProvidePlayBackgroundSoundLogger(NSString *message)
                 if (![GDFileSystem removeItemAtPath:outDirectory
                                               error:&error] )
                 {
-                    [DEMOUI
+                    [weakSelf.demoUserInterface
                      demoLogFormat:@"%s Failed to delete file \"%@\". %@.\n",
                      __PRETTY_FUNCTION__, outDirectory, error];
                 }
@@ -111,7 +116,7 @@ static void demoProvidePlayBackgroundSoundLogger(NSString *message)
                                           attributes:nil
                                                error:&error] )
             {
-                [DEMOUI
+                [weakSelf.demoUserInterface
                  demoLogFormat:@"%s Failed to create directory \"%@\". %@.\n",
                  __PRETTY_FUNCTION__, outDirectory, error];
             }
@@ -126,22 +131,22 @@ static void demoProvidePlayBackgroundSoundLogger(NSString *message)
                               toPath:outFilename
                                error:&error] )
         {
-            [DEMOUI demoLogFormat:
+            [weakSelf.demoUserInterface demoLogFormat:
              @"%s Moved attachment from \"%@\" to \"%@\" OK.\n",
              __PRETTY_FUNCTION__, inFilename, outFilename];
         }
         else {
-            [DEMOUI demoLogFormat:
+            [weakSelf.demoUserInterface demoLogFormat:
              @"%s Failed to move attachment from \"%@\" to \"%@\". %@.\n",
              __PRETTY_FUNCTION__, inFilename, outFilename, error];
         }
 
-        
-        
-        [DEMOUI demoLogFormat:@"gdStartPath %@",
+        [[Backgrounder sharedInstance]
+         setLogger:demoProvidePlayBackgroundSoundLogger];
+        [weakSelf.demoUserInterface demoLogFormat:@"gdStartPath %@",
          [BackgrounderForGoodDynamics
-          gdStartPath:outFilename
-          logger:demoProvidePlayBackgroundSoundLogger] ?
+          gdStartPlayback:outFilename
+          in:[Backgrounder sharedInstance]] ?
          @"OK" :
          @"Failed"];
 
@@ -149,7 +154,8 @@ static void demoProvidePlayBackgroundSoundLogger(NSString *message)
         return request;
     }];
     
-    [DEMOUI demoLogFormat:@"Ready for: %@\n", [self.provider getServiceID]];
+    [self.demoUserInterface
+     demoLogFormat:@"Ready for: %@\n", self.provider.serviceID];
 }
 
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,20 @@
 
 package com.good.example.contributor.jhawkins.demoframework;
 
+import android.app.Activity;
+import android.view.View;
+
 public interface UserInterface {
+    public Activity activity();
+
     public void demoLog(String message);
     public void demoEdit(String content, Component saver);
+
+    public UserInterface addDemoClasses(Class<?> ... components);
+
+    public UserInterface addDemoPanelClasses(Class<?> ... panels);
+
+    public void refresh();
+
+    public View secondView();
 }

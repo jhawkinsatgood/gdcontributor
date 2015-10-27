@@ -19,6 +19,10 @@
  * THE SOFTWARE.
  */
 
+/* With thanks to the Audio Queue Services Programming Guide
+ https://developer.apple.com/library/ios/documentation/MusicAudio/Conceptual/AudioQueueProgrammingGuide/AQRecord/RecordingAudio.html#//apple_ref/doc/uid/TP40005343-CH4-SW1
+ */
+
 #import "Backgrounder.h"
 
 @import AVFoundation;
@@ -31,6 +35,8 @@ typedef enum {
 
 // Define a C struct to hold the state. The audio APIs are C APIs, not
 // Objective-C.
+
+const int kInputBufferCount = 3;
 typedef struct BACKGROUNDER_STATE {
     backgrounder_opener *open_func;
     backgrounder_closer *close_func;
@@ -45,7 +51,14 @@ typedef struct BACKGROUNDER_STATE {
     
     backgrounder_queue_state queue_state;
     backgrounder_logger *logger;
+    
     uint playCount;
+    
+    AudioQueueBufferRef inputBuffers[kInputBufferCount];
+    UInt32 bufferByteSize;
+    SInt64 currentPacket;
+    AudioStreamBasicDescription audioStreamBasicDescription;
+    
 } backgrounder_state;
 
 @interface Backgrounder()
@@ -55,11 +68,16 @@ typedef struct BACKGROUNDER_STATE {
 
 -(BOOL)setUpAVAudioSession:(BOOL)active;
 -(BOOL)resetState;
--(BOOL)startAudio;
+-(BOOL)startPlayback;
+-(BOOL)startRecording;
 @end
 
 @implementation Backgrounder
 
+/* logOSError - Logs an error message, if a specified OSStatus value represents
+ * an error condition.
+ * Returns TRUE if the OSStatus value represented an error.
+ */
 int logOSError(NSString *preamble,
                OSStatus osStatus,
                backgrounder_logger logger)
@@ -73,11 +91,113 @@ int logOSError(NSString *preamble,
         osStatusArray[sizeof(OSStatus) - (i+1)] = *(osStatusChars + i);
     }
     osStatusArray[sizeof(OSStatus)] = 0;
-    logger([NSString stringWithFormat:@"%@ failed %d \"%s\".\n",
+    logger([NSString stringWithFormat:@"%@ failed %d \"%s\". Reminder: macerror\n",
             preamble, (int)osStatus, osStatusArray]);
     
     return TRUE;
 }
+
+/*
+ * Conforms to AudioQueueInputCallback, which is declared in the 
+ * Audio Toolbox/AudioQueue.h file.
+ */
+void audioQueueInputCallback(void *inUserData,
+                             AudioQueueRef                   inAQ,
+                             AudioQueueBufferRef             inBuffer,
+                             const AudioTimeStamp *          inStartTime,
+                             UInt32                          inNumberPacketDescriptions,
+                             const AudioStreamPacketDescription *inPacketDescs
+                             )
+{
+    backgrounder_state *state = (backgrounder_state *)inUserData;
+    AudioStreamBasicDescription *asbd = &(state->audioStreamBasicDescription);
+    
+    if (inNumberPacketDescriptions == 0 &&
+        asbd->mBytesPerPacket != 0)
+    {
+        inNumberPacketDescriptions =
+        inBuffer->mAudioDataByteSize / asbd->mBytesPerPacket;
+    }
+    
+    OSStatus osStatus = AudioFileWritePackets(state->audioFileID,
+                                              false,
+                                              inBuffer->mAudioDataByteSize,
+                                              inPacketDescs,
+                                              state->currentPacket,
+                                              &inNumberPacketDescriptions,
+                                              inBuffer->mAudioData );
+    if (logOSError(@"AudioFileWritePackets", osStatus, state->logger)) {
+        return;
+    }
+
+    state->currentPacket += inNumberPacketDescriptions;
+
+    if (state->queue_state == backgrounder_queue_state_STOPPING) {
+        return;
+    }
+
+    state->playCount++;
+    state->logger([NSString
+                   stringWithFormat:@"Play Count: %u\n", state->playCount]);
+
+    osStatus = AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
+    logOSError(@"AudioQueueEnqueueBuffer for input", osStatus, state->logger);
+}
+
+void DeriveBufferSize (AudioQueueRef audioQueue,
+                       AudioStreamBasicDescription *asbd,
+                       Float64 seconds,
+                       UInt32 *outBufferSize
+                       )
+{
+    static const int maxBufferSize = 0x50000;
+    int maxPacketSize = asbd->mBytesPerPacket;
+    
+    if (maxPacketSize == 0) {
+        UInt32 maxVBRPacketSize = sizeof(maxPacketSize);
+        AudioQueueGetProperty(audioQueue,
+                              kAudioQueueProperty_MaximumOutputPacketSize,
+                              &maxPacketSize,
+                              &maxVBRPacketSize );
+    }
+
+    Float64 numBytesForTime = asbd->mSampleRate * maxPacketSize * seconds;
+    
+    *outBufferSize =(UInt32) (numBytesForTime < maxBufferSize ?
+                              numBytesForTime :
+                              maxBufferSize);
+}
+
+OSStatus SetMagicCookieForFile (AudioQueueRef inQueue,
+                                AudioFileID inFile,
+                                backgrounder_logger *logger
+                                )
+{
+    UInt32 cookieSize;
+    OSStatus osStatus =
+    AudioQueueGetPropertySize(inQueue,
+                              kAudioQueueProperty_MagicCookie,
+                              &cookieSize);
+
+    if (!logOSError(@"Get magic cookie size", osStatus, logger)) {
+        char* magicCookie = (char *) malloc(cookieSize);
+        osStatus = AudioQueueGetProperty(inQueue,
+                                         kAudioQueueProperty_MagicCookie,
+                                         magicCookie,
+                                         &cookieSize);
+        if (!logOSError(@"Get magic cookie itself", osStatus, logger)) {
+            osStatus = AudioFileSetProperty(inFile,
+                                            kAudioFilePropertyMagicCookieData,
+                                            cookieSize,
+                                            magicCookie);
+            logOSError(@"Set magic cookie", osStatus, logger);
+        }
+        free (magicCookie);
+    }
+    
+    return osStatus;
+}
+
 
 void audioQueueOutputCallback(void *inUserData,
                               AudioQueueRef inAQ,
@@ -86,14 +206,6 @@ void audioQueueOutputCallback(void *inUserData,
 {
     backgrounder_state *state = (backgrounder_state *)inUserData;
     if (state->queue_state == backgrounder_queue_state_STOPPING) {
-        return;
-    }
-    
-    if (!state->open_func(state->parameter,
-                          &(state->audioFileID),
-                          &(state->audioFileClientData),
-                          state->logger)
-        ) {
         return;
     }
     
@@ -115,16 +227,29 @@ void audioQueueOutputCallback(void *inUserData,
     }
     
     osStatus = AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
-    logOSError(@"AudioQueueEnqueueBuffer", osStatus, state->logger);
+    logOSError(@"AudioQueueEnqueueBuffer for output", osStatus, state->logger);
 
     // I couldn't see a way to rewind an audio file. The above will read the
     // whole file and leave it at EOF. So, it seems necessary to close the file
     // here, both AudioFile and external if any.
     AudioFileClose(state->audioFileID);
     if (state->close_func) {
-        if (state->close_func(state->parameter, state->audioFileClientData)) {
+        if (state->close_func(state->parameter,
+                              state->audioFileClientData,
+                              state->logger))
+        {
             state->audioFileClientData = NULL;
         };
+    }
+
+// Reopen the file.
+    if (!state->open_func(state->parameter,
+                          NULL,
+                          &(state->audioFileID),
+                          &(state->audioFileClientData),
+                          state->logger)
+        ) {
+        return;
     }
     
     UInt32 framesPrepared;
@@ -215,7 +340,7 @@ UInt32 getAudioProperty_UInt32(AudioFileID audioFileID,
 {
     NSError *error = nil;
     BOOL categoryOK = [[AVAudioSession sharedInstance]
-                       setCategory:AVAudioSessionCategoryPlayback
+                       setCategory:AVAudioSessionCategoryPlayAndRecord
                        withOptions:AVAudioSessionCategoryOptionMixWithOthers
                        error:&error];
     if (!categoryOK) {
@@ -261,28 +386,40 @@ UInt32 getAudioProperty_UInt32(AudioFileID audioFileID,
 
 -(BOOL)stop
 {
-    if (self.state &&
-        self.state->queue_state != backgrounder_queue_state_STOPPED )
-    {
-        self.state->queue_state = backgrounder_queue_state_STOPPING;
-        OSStatus osStatus = AudioQueueStop(self.state->audioQueueRef, true);
+    backgrounder_state *state = self.state;
+    if (state && state->queue_state != backgrounder_queue_state_STOPPED ) {
+        state->queue_state = backgrounder_queue_state_STOPPING;
+        OSStatus osStatus = AudioQueueStop(state->audioQueueRef, true);
         if (logOSError(@"AudioQueueStop failed",
                        osStatus,
-                       self.state->logger) )
+                       state->logger) )
         {
             return NO;
         }
-        osStatus = AudioQueueDispose(self.state->audioQueueRef, true);
+        osStatus = AudioQueueDispose(state->audioQueueRef, true);
         if (logOSError(@"AudioQueueDispose failed",
                        osStatus,
-                       self.state->logger) )
+                       state->logger) )
         {
             return NO;
         }
-        self.state->queue_state = backgrounder_queue_state_STOPPED;
-        if (self.state->parameter) {
-            free(self.state->parameter);
-            self.state->parameter = NULL;
+
+        
+        AudioFileClose(state->audioFileID);
+        if (state->close_func) {
+            if (state->close_func(state->parameter,
+                                  state->audioFileClientData,
+                                  state->logger) )
+            {
+                state->audioFileClientData = NULL;
+            };
+        }
+
+        
+        state->queue_state = backgrounder_queue_state_STOPPED;
+        if (state->parameter) {
+            free(state->parameter);
+            state->parameter = NULL;
         }
         [self setUpAVAudioSession:NO];
     }
@@ -317,64 +454,138 @@ UInt32 getAudioProperty_UInt32(AudioFileID audioFileID,
     self.state->logger = oldLogger;
     self.state->playCount = 0;
     self.state->queue_state = backgrounder_queue_state_STOPPED;
+    self.state->currentPacket = 0;
 
     return YES;
 }
 
++(NSURL *)URLForRecording:(char *)inParameter
+{
+    NSString *path = [NSString stringWithCString:inParameter
+                                        encoding:NSASCIIStringEncoding];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *array = [fileManager URLsForDirectory:NSDocumentDirectory
+                                         inDomains:NSUserDomainMask];
+    NSURL *directory = (NSURL *)array[0];
+    return [directory URLByAppendingPathComponent:path];
+}
+
 static int openBackgrounderPath(void *inParameter,
+                                AudioStreamBasicDescription *asbd,
                                 AudioFileID *audioFileID,
                                 void **audioFileClientData,
                                 backgrounder_logger logger)
 {
-    char *path = inParameter;
-    
-    // It seems pretty nuts to create an NSURL that is going to be bridged to
-    // a CFURLRef. However, I couldn't seem to create a CFStringRef from the
-    // C string that is in the ->path. The CFStringCreateWithCStringNoCopy and
-    // CFStringCreateWithCString functions always returned NULL. Without a
-    // CFStringRef it didn't seem possible to create a CFURLRef. The bridge
-    // works.
-    NSURL *audioURL =
-    [NSURL fileURLWithPath:
-     [NSString stringWithCString:path
-                        encoding:NSASCIIStringEncoding]];
-    
+    NSURL *audioURL;
+    if (asbd) {
+        audioURL = [Backgrounder URLForRecording:inParameter];
+    }
+    else {
+        // It seems pretty nuts to create an NSURL that is going to be bridged to
+        // a CFURLRef. However, I couldn't seem to create a CFStringRef from the
+        // C string that is in the ->path. The CFStringCreateWithCStringNoCopy and
+        // CFStringCreateWithCString functions always returned NULL. Without a
+        // CFStringRef it didn't seem possible to create a CFURLRef. The bridge
+        // works.
+        audioURL = [NSURL fileURLWithPath:
+                    [NSString stringWithCString:inParameter
+                                       encoding:NSASCIIStringEncoding]];
+    }
+    const char *reason = (asbd ? "writing" : "resource");
     if (!audioURL) {
-        logger([NSString stringWithFormat:@"No URL for resource \"%s\"\n",
-                path]);
+        logger([NSString stringWithFormat:@"No URL for %s \"%s\"\n",
+                reason, inParameter]);
         return FALSE;
     }
     
-    OSStatus osStatus = AudioFileOpenURL((__bridge CFURLRef)(audioURL),
-                                         kAudioFileReadPermission,
-                                         0,
-                                         audioFileID );
-    if (logOSError([NSString stringWithFormat:
-                    @"AudioFileOpenURL(%@,,,) failed.\n", audioURL],
-                   osStatus, logger)) {
-        return FALSE;
+    int *wasCreated = malloc(sizeof(int));
+    *audioFileClientData = wasCreated;
+    
+    int ret = TRUE;
+    if (asbd) {
+        OSStatus osStatus = AudioFileCreateWithURL((__bridge CFURLRef)(audioURL),
+                                          kAudioFileAIFFType, asbd,
+                                          kAudioFileFlags_EraseFile,
+                                          audioFileID);
+        ret = !logOSError([NSString stringWithFormat:
+                           @"openBackgrounderPath AudioFileCreateWithURL "
+                          "\"%@\" from path \"%s\"",
+                           audioURL, (char *)inParameter],
+                          osStatus, logger);
+        *wasCreated = ret;
+    }
+    else {
+        OSStatus osStatus = AudioFileOpenURL((__bridge CFURLRef)(audioURL),
+                                             kAudioFileReadPermission,
+                                             0,
+                                             audioFileID );
+        ret = !logOSError([NSString stringWithFormat:
+                           @"openBackgrounderPath AudioFileOpenURL(%@,,,) "
+                           "failed.\n", audioURL],
+                          osStatus, logger);
+        *wasCreated = FALSE;
     }
     
-    *audioFileClientData = NULL;
-    
+    return ret;
+}
+
+static int closeBackgrounderPath(void *inParameter,
+                                 void *audioFileClientData,
+                                 backgrounder_logger logger)
+{
+    int wasCreated = * (int *)audioFileClientData;
+    if (wasCreated) {
+        NSURL *audioURL = [Backgrounder URLForRecording:inParameter];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error;
+        NSDictionary *attributes =
+        [fileManager attributesOfItemAtPath:[audioURL path] error:&error];
+        if (attributes == nil) {
+            logger([NSString
+                    stringWithFormat:@"closeBackgrounderPath \"%s\" error %@\n"
+                    "\"%@\"\n\"%@\"\n",
+                    inParameter, error, audioURL, [audioURL path]]);
+        }
+        else {
+            logger([NSString
+                    stringWithFormat:@"closeBackgrounderPath \"%s\" %@\n",
+                    inParameter, attributes]);
+        }
+    }
+
+    free(audioFileClientData);
+
     return TRUE;
 }
 
--(BOOL)startPath:(NSString *)path
+
+-(BOOL)startRecordingPath:(NSString *)path
+{
+    if (![self resetState]) return NO;
+
+    self.state->open_func = openBackgrounderPath;
+    self.state->close_func = closeBackgrounderPath;
+    self.state->parameter =
+    strdup([path cStringUsingEncoding:NSASCIIStringEncoding]);
+    
+    return [self startRecording];
+}
+
+-(BOOL)startPlaybackPath:(NSString *)path
 {
     if (![self resetState]) return NO;
     
     self.state->open_func = openBackgrounderPath;
-    self.state->close_func = NULL;
+    self.state->close_func = closeBackgrounderPath;
     self.state->parameter =
     strdup([path cStringUsingEncoding:NSASCIIStringEncoding]);
     
-    return [self startAudio];
+    return [self startPlayback];
 }
 
--(BOOL)startWithOpen:(backgrounder_opener *)open_func
-               close:(backgrounder_closer *)close_func
-           parameter:(void *)open_parameter
+-(BOOL)startRecordingWithOpen:(backgrounder_opener *)open_func
+                        close:(backgrounder_closer *)close_func
+                    parameter:(void *)open_parameter
 {
     if (![self resetState]) return NO;
     
@@ -382,11 +593,112 @@ static int openBackgrounderPath(void *inParameter,
     self.state->close_func = close_func;
     self.state->parameter = open_parameter;
     
-    return [self startAudio];
+    return [self startRecording];
 }
 
+-(BOOL)startPlaybackWithOpen:(backgrounder_opener *)open_func
+                       close:(backgrounder_closer *)close_func
+                   parameter:(void *)open_parameter
+{
+    if (![self resetState]) return NO;
+    
+    self.state->open_func = open_func;
+    self.state->close_func = close_func;
+    self.state->parameter = open_parameter;
+    
+    return [self startPlayback];
+}
 
--(BOOL)startAudio
+-(BOOL)startRecording
+{
+    backgrounder_state *state = self.state;
+    
+    // Following writes a warning to the log, if necessary.
+    [self hasBackgroundModeAudio];
+
+    AudioStreamBasicDescription *asbd = &(state->audioStreamBasicDescription);
+    if (!asbd) {
+        state->logger([NSString stringWithFormat:
+                @"startRecording failed malloc(%lu).\n",
+                sizeof(AudioStreamBasicDescription)]);
+        return NO;
+    }
+
+    asbd->mFormatID = kAudioFormatLinearPCM;
+    asbd->mSampleRate = 44100.0;
+    asbd->mChannelsPerFrame = 2;
+    asbd->mBitsPerChannel = 16;
+
+    asbd->mBytesPerPacket = asbd->mBytesPerFrame =
+    asbd->mChannelsPerFrame * sizeof(SInt16);
+
+    asbd->mFramesPerPacket = 1;
+
+    asbd->mReserved = 0;
+
+    asbd->mFormatFlags =
+    kLinearPCMFormatFlagIsBigEndian | kLinearPCMFormatFlagIsSignedInteger |
+    kLinearPCMFormatFlagIsPacked;
+    
+    // In the following call, state is passed as the inUserData.
+    // This makes the backgrounder_state accessible in the queue callback.
+    OSStatus osStatus = AudioQueueNewInput(asbd,
+                                           audioQueueInputCallback,
+                                           state,
+                                           NULL, kCFRunLoopCommonModes, 0,
+                                           &(state->audioQueueRef) );
+    if (logOSError(@"startRecording AudioQueueNewInput(...) failed.",
+                   osStatus, state->logger)) {
+        return NO;
+    }
+    
+    UInt32 dataFormatSize = sizeof(state->audioStreamBasicDescription);
+    osStatus = AudioQueueGetProperty(state->audioQueueRef,
+                                     kAudioQueueProperty_StreamDescription,
+                                     asbd,
+                                     &dataFormatSize);
+    logOSError(@"startRecording AudioQueueGetProperty",
+               osStatus, state->logger);
+
+    if (!state->open_func(state->parameter,
+                          asbd,
+                          &(state->audioFileID),
+                          &(state->audioFileClientData),
+                          state->logger)
+        ) {
+        return NO;
+    }
+    
+    DeriveBufferSize(state->audioQueueRef, asbd, 0.5, &(state->bufferByteSize));
+
+    for(int i=0; i<kInputBufferCount; i++) {
+        osStatus = AudioQueueAllocateBuffer(state->audioQueueRef,
+                                            state->bufferByteSize,
+                                            &(state->inputBuffers[i]));
+        logOSError([NSString stringWithFormat:
+                    @"%@[%d]", @"startRecording AudioQueueAllocateBuffer", i],
+                   osStatus, state->logger);
+        
+        osStatus = AudioQueueEnqueueBuffer(state->audioQueueRef,
+                                           state->inputBuffers[i],
+                                           0, NULL);
+        logOSError([NSString stringWithFormat:
+                    @"%@[%d]", @"startRecording AudioQueueEnqueueBuffer", i],
+                   osStatus, state->logger);
+    }
+    
+    [self setUpAVAudioSession:YES];
+    
+    osStatus = AudioQueueStart(state->audioQueueRef, NULL);
+    if (logOSError(@"startRecording AudioQueueStart", osStatus, state->logger)) {
+        return NO;
+    }
+    state->queue_state = backgrounder_queue_state_STARTED;
+    
+    return YES;
+}
+
+-(BOOL)startPlayback
 {
     backgrounder_state *state = self.state;
     
@@ -396,6 +708,7 @@ static int openBackgrounderPath(void *inParameter,
     // Open the audio file to read the stream description and other details that
     // are required to set up the audio queue.
     if (!state->open_func(state->parameter,
+                          NULL,
                           &(state->audioFileID),
                           &(state->audioFileClientData),
                           state->logger)
@@ -406,10 +719,14 @@ static int openBackgrounderPath(void *inParameter,
     AudioStreamBasicDescription *asbd = getASBD_malloc(state->audioFileID,
                                                        state->logger );
     if (!asbd) {
-        state->logger(@"Failed to get AudioStreamBasicDescription\n");
+        state->logger(@"startPlayback failed to get "
+                      "AudioStreamBasicDescription\n");
         return NO;
     }
     
+    // Following lines will set values such that the whole file can be loaded
+    // into a single buffer. ToDo: Proper implementation with small buffers that
+    // get refilled only as needed and are otherwise consumed packet-by-packet.
     state->byteCount =
     getAudioProperty_UInt32(state->audioFileID,
                             kAudioFilePropertyAudioDataByteCount,
@@ -420,14 +737,8 @@ static int openBackgrounderPath(void *inParameter,
                             kAudioFilePropertyAudioDataPacketCount,
                             state->logger );
     
-    // Details obtained, so close the file. It will be opened again when it
-    // starts to play back.
-    AudioFileClose(state->audioFileID);
-    if (state->close_func) {
-        if (state->close_func(state->parameter, state->audioFileClientData)) {
-            state->audioFileClientData = NULL;
-        };
-    }
+    // Details obtained, leave the file open. It gets closed and re-opened in
+    // the queue callback.
     
     // In the following call, state is passed as the inUserData.
     // This makes the backgrounder_state accessible in the queue callback.
@@ -436,7 +747,7 @@ static int openBackgrounderPath(void *inParameter,
                                             state,
                                             NULL, NULL, 0,
                                             &(state->audioQueueRef) );
-    if (logOSError(@"AudioQueueNewOutput(...) failed.",
+    if (logOSError(@"startPlayback AudioQueueNewOutput(...) failed.",
                    osStatus, state->logger)) {
         return NO;
     }
@@ -448,7 +759,8 @@ static int openBackgrounderPath(void *inParameter,
                                                    state->packetCount,
                                                    &audioQueueBufferRef);
     if (logOSError([NSString
-                    stringWithFormat:@"Audio...BufferWithPacket...s(,%d,%d,)",
+                    stringWithFormat:@"startPlayback "
+                    "Audio...BufferWithPacket...s(,%d,%d,)",
                     (unsigned int)state->byteCount,
                     (unsigned int)state->packetCount],
                    osStatus, state->logger)) {

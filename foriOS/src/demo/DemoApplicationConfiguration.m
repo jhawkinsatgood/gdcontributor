@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@
  */
 
 #import "DemoApplicationConfiguration.h"
-#import "gdRuntimeDispatcher.h"
+#import "GdcRuntimeDispatcher.h"
 #import "DemoUtility.h"
 
 @interface DemoApplicationConfiguration()
@@ -39,17 +39,18 @@
 
 -(NSArray *)demoExecuteOrPickList
 {
-    [[gdRuntimeDispatcher sharedInstance]
+    [[GdcRuntimeDispatcher sharedInstance]
      addObserverForApplicationConfiguration:
-     GDCONFIGURATIONOBSERVER(configurationDictionary, configurationString) {
-         [DEMOUI
+     GDC_CONFIGURATION_OBSERVER(configurationDictionary, configurationString) {
+         [self.demoUserInterface
           demoLogFormat:@"Configuration dictionary: %@\n"
           "Configuration string: %@\n",
           configurationDictionary, configurationString];
          
      }
      andInvokeNow:YES];
-    [DEMOUI demoLogString:@"Ready for configuration updates.\n"];
+    [self.demoUserInterface
+     demoLogString:@"Ready for configuration updates.\n"];
     
     return nil;
 }

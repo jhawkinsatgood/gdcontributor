@@ -25,13 +25,14 @@
 #import "DemoComponent.h"
 
 @interface MainPage ()
-@property (strong, nonatomic) NSString *results;
-@property (strong, nonatomic) NSString *editData;
-@property (strong, nonatomic) NSArray *pickList;
+@property (nonatomic) NSString *results;
+@property (nonatomic) NSString *editData;
+@property (nonatomic) NSArray *pickList;
 @property (assign, nonatomic) int pickFor;
 
-@property (strong) DemoComponent *save;
-@property (strong) NSMutableArray *demos;
+@property DemoComponent *save;
+@property NSMutableArray *demos;
+@property NSMutableArray *demoPanels;
 @property (assign) BOOL hasLoaded;
 
 -(instancetype)showEditData:(NSString *)newEditData;
@@ -41,10 +42,22 @@
                 valuespec:(NSString *)valuespec;
 +(NSString *)HTMLreplace:(NSString *)str newlines:(BOOL)nls;
 +(NSString *)getFormText:(NSURLRequest *)urlRequest;
+
++(int)fromString:(NSObject *)string;
+
 -(instancetype)reloadHTML;
 @end
 
 @implementation MainPage
+
+-(void)segueToSecondViewFrom:(DemoPanel *)sender
+{
+    if (self.segueToSecond != nil) {
+        [self.uiWebView.window.rootViewController
+         performSegueWithIdentifier:self.segueToSecond
+         sender:sender];
+    }
+}
 
 -(instancetype)init
 {
@@ -105,7 +118,8 @@
 {
     if (!self.demos) self.demos = [NSMutableArray new];
     DemoComponent<DemoComponent> *demo = [class new];
-    [self.demos addObject:[demo demoSetUserInterface:self]];
+    demo.demoUserInterface = self;
+    [self.demos addObject:demo];
     return self;
 }
 -(instancetype)addDemoClasses:(NSArray *)classes
@@ -118,6 +132,24 @@
 -(instancetype)addDemoClassNamed:(char *)classname
 {
     return [self addDemoClass:objc_getClass(classname)];
+}
+
+-(void)addDemoPanelClass:(Class)class
+{
+    if (!self.demoPanels) self.demoPanels = [NSMutableArray new];
+    DemoPanel *demoPanel = [[class alloc] init];
+    [demoPanel setDemoUserInterface:self];
+    [self.demoPanels addObject:demoPanel];
+}
+-(void)addDemoPanelClasses:(NSArray *)classes
+{
+    for (int i=0; i<classes.count; i++) {
+        [self addDemoPanelClass:classes[i]];
+    }
+}
+-(void)addDemoPanelClassNamed:(char *)className
+{
+    [self addDemoClass:objc_getClass(className)];
 }
 
 -(void)setUIWebView:(UIWebView *)uiWebView
@@ -149,10 +181,16 @@
 
 -(instancetype)load
 {
-    for (int i=0; i<self.demos.count; i++) {
+    if (self.demos) for (int i=0; i<self.demos.count; i++) {
         DemoComponent<DemoComponent> *demoi = self.demos[i];
         [demoi demoLoad];
     }
+
+    if (self.demoPanels) for (int i=0; i<self.demoPanels.count; i++) {
+        DemoPanel *demoPaneli = self.demoPanels[i];
+        [demoPaneli demoPanelLoad:NO];
+    }
+    
     self.hasLoaded = YES;
     [self reloadHTML];
     return self;
@@ -164,10 +202,28 @@
     return [self reloadHTML];
 }
 
++(int)fromString:(NSObject *)string
+{
+    return [[[NSNumberFormatter new] numberFromString:(NSString *)string ]
+            intValue];
+}
+
 -(BOOL)handleCommand:(NSString *)command withParameter:(NSString *)parameter
 {
     if ([command isEqualToString:@"CLEAR"]) {
         [self demoLogString:nil];
+        return YES;
+    }
+    else if ([command isEqualToString:@"panel"]) {
+        NSArray *parameters = [parameter componentsSeparatedByString:@","];
+        int panel = [MainPage fromString:parameters[0]];
+        int division = [MainPage fromString:parameters[1]];
+        int item =  [MainPage fromString:parameters[2]];
+        DemoPanel *demoPanel = (DemoPanel *)(self.demoPanels[panel]);
+        NSArray *divisioni = demoPanel.demoPanelItemDivisions[division];
+        DemoPanelItem *demoPanelItem = (DemoPanelItem *)divisioni[item];
+        demoPanelItem.clickBlock(demoPanelItem);
+        [self reloadHTML];
         return YES;
     }
     else if ([command isEqualToString:@"execute"]) {
@@ -366,6 +422,88 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 {
     return [self _commandHTML:command label:label valuespec:@"null"];
 }
++(NSString *)commandHTML:(NSString *)command
+                   label:(NSString *)label
+              valueArray:(NSArray *)value
+{
+    return [MainPage _commandHTML:command
+                            label:label
+                        valuespec:[NSString stringWithFormat:@"'%@'",
+                                   [value componentsJoinedByString:@","]]];
+}
+
++(NSString *)HTMLForDemoPanelItem:(DemoPanelItem *)demoPanelItem
+                    asLocation:(NSArray *)location
+{
+    NSMutableString *ret = [NSMutableString
+                            stringWithString:@"<span class=\"demo-item\">"];
+    if (demoPanelItem.label != nil) {
+        switch (demoPanelItem.type) {
+            case DemoPanelItemTypeLabel:
+                [ret appendFormat:@"<span class=\"demo-label\">%@</span>",
+                 demoPanelItem.label];
+                break;
+
+            case DemoPanelItemTypeCommandOn:
+                [ret appendString:
+                 [MainPage commandHTML:@"panel"
+                                 label:[demoPanelItem.label
+                                        stringByAppendingString:@" &gt;"]
+                            valueArray:location
+                  ]];
+                
+                break;
+                
+            case DemoPanelItemTypeCommandBack:
+                [ret appendString:
+                 [MainPage commandHTML:@"panel"
+                                 label:[@"&lt; " stringByAppendingString:
+                                        demoPanelItem.label]
+                            valueArray:location
+                  ]];
+                
+                break;
+                
+//            case DemoPanelItemtypeOption:
+//                [ret appendFormat:@"<div class=\"demo-option\">%@ %@</div>",
+//                 demoPanelItem.label,
+//                 [MainPage commandHTML:@"panel"
+//                                 label:@"Go &gt;"
+//                            valueArray:location
+//                  ]];
+//                break;
+        }
+    }
+    [ret appendString:@"</span>"];
+    return (NSString *)ret;
+}
+
++(NSString *)HTMLForDemoPanel:(DemoPanel *)demoPanel
+                asPanelNumber:(NSNumber *)panelNumber
+{
+    if (demoPanel.demoPanelItemDivisions.count <= 0) return @"";
+    NSMutableString *ret = [NSMutableString
+                            stringWithString:@"<div class=\"demo-panel\">"];
+    for (int division=0;
+         division<demoPanel.demoPanelItemDivisions.count;
+         division++)
+    {
+        NSArray *divisioni = demoPanel.demoPanelItemDivisions[division];
+        [ret appendString:@"<div class=\"demo-division\">"];
+        for (int item=0; item<divisioni.count; item++) {
+            [ret
+             appendString:[MainPage
+                           HTMLForDemoPanelItem:divisioni[item]
+                           asLocation:@[panelNumber,
+                                        [NSNumber numberWithInt:division],
+                                        [NSNumber numberWithInt:item] ]
+                           ]];
+        }
+        [ret appendString:@"</div>"];
+    }
+    [ret appendString:@"</div>"];
+    return (NSString *)ret;
+}
 
 -(instancetype)reloadHTML
 {
@@ -383,11 +521,11 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     "  .holder {"
     "      margin-top: 12pt;"
     "  }"
-    "  div.picker {"
+    "  div.picker, div.demo-panel {"
     "      margin-top: 12pt;"
     "      border-top: solid 1pt black;"
     "  }"
-    "  div.picker div {"
+    "  div.picker div, div.demo-division {"
     "      border-bottom: solid 1pt black;"
     "      padding-bottom: 8pt;"
     "  }"
@@ -399,6 +537,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     "      padding: 4pt;"
     "      margin-right: 4pt;"
     "  }"
+    "  span.demo-label { margin-right: 4pt; } "
     "  .information {"
     "      font-size: 8pt;"
     "  }"
@@ -463,7 +602,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
          [MainPage commandHTML:@"save" label:@"Save &gt;" control:ctrlname]];
     }
     
-    for (int i=0; i<self.demos.count; i++) {
+    if (self.demos) for (int i=0; i<self.demos.count; i++) {
         DemoComponent<DemoComponent> *demoi = self.demos[i];
         NSString *executeLabel = [demoi demoExecuteLabel];
         NSString *switchLabel = [demoi demoGetSwitchLabel];
@@ -484,10 +623,21 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
             [pageHTML appendString:@"</div></div>"];
         }
     }
-
+    
+    if (self.demoPanels) for (int panel=0; panel<self.demoPanels.count; panel++) {
+        [pageHTML appendString:[MainPage
+                                HTMLForDemoPanel:self.demoPanels[panel]
+                                asPanelNumber:[NSNumber numberWithInt:panel]]];
+    }
+    
     [pageHTML appendString:@"</body></html>"];
     [self.uiWebView loadHTMLString:pageHTML baseURL:nil];
     return self;
+}
+
+-(void)refresh
+{
+    [self reloadHTML];
 }
 
 @end

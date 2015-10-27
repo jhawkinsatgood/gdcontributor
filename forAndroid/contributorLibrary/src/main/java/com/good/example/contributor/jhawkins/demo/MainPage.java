@@ -21,17 +21,20 @@
 
 package com.good.example.contributor.jhawkins.demo;
 
-import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.text.TextUtils;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.good.example.contributor.jhawkins.demoframework.Component;
+import com.good.example.contributor.jhawkins.demoframework.Panel;
+import com.good.example.contributor.jhawkins.demoframework.PanelItem;
 import com.good.example.contributor.jhawkins.demoframework.UserInterface;
+
+import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 public class MainPage implements UserInterface {
     // MainPage is a singleton class
@@ -60,6 +63,16 @@ public class MainPage implements UserInterface {
     private Component save = null;
     
     private ArrayList<Component> demos = null;
+    private ArrayList<Panel>panels = null;
+
+    private View secondView = null;
+    public View secondView() {
+        return secondView;
+    }
+    public MainPage setSecondView(View secondView) {
+        this.secondView = secondView;
+        return this;
+    }
 
     // HTML in the page, access to which is controlled by a semaphore.
     // These are private but still accessible to inner classes of this class.
@@ -95,6 +108,22 @@ public class MainPage implements UserInterface {
             try {
                 componenti = (Component)component.newInstance();
                 demos.add( componenti.setUserInterface(this) );
+            } catch (InstantiationException exception) {
+                throw new Error("Failed to instantiate: " + exception.getMessage());
+            } catch (IllegalAccessException exception) {
+                throw new Error("Failed to access legally: " + exception.getMessage());
+            }
+        }
+        return this;
+    }
+    public MainPage addDemoPanelClasses(Class<?> ... panels)
+    {
+        if (this.panels == null) this.panels = new ArrayList<Panel>(panels.length);
+        for(Class<?> panel : panels) {
+            Panel paneli;
+            try {
+                paneli = (Panel)panel.newInstance();
+                this.panels.add(paneli.setUserInterface(this));
             } catch (InstantiationException e) {
                 throw new Error("Failed to instantiate: " + e.getMessage());
             } catch (IllegalAccessException e) {
@@ -103,7 +132,7 @@ public class MainPage implements UserInterface {
         }
         return this;
     }
-    
+
     public MainPage setWebView(WebView webView)
     {
     	if (this.webView != webView) {
@@ -120,6 +149,9 @@ public class MainPage implements UserInterface {
     		reloadHTML();
     	}
     	return this;
+    }
+    public Activity activity() {
+        return this.activity;
     }
     
     public MainPage setBackgroundColour( String backgroundColour )
@@ -150,6 +182,9 @@ public class MainPage implements UserInterface {
         if (demos != null && !hasLoaded) for(Component demo: demos) {
         	demo.demoLoad();
         }
+        if (panels != null && !hasLoaded) for (Panel panel: panels) {
+            panel.demoPanelLoad(false);
+        }
         hasLoaded = true;
         reloadHTML();
         return this;
@@ -171,6 +206,15 @@ public class MainPage implements UserInterface {
     {
         if (command.equals("CLEAR")) {
             demoLog(null);
+        }
+        else if (command.equals("panel")) {
+            String[] parameterStrings = parameter.split(",", 3);
+            int[] location = new int[3];
+            for (int i=0; i<parameterStrings.length; i++) {
+                location[i] = Integer.valueOf(parameterStrings[i]);
+            }
+            panels.get( location[0] ).panelItem( location[1], location[2] ).onClick();
+            reloadHTML();
         }
         else if (command.equals("execute")) {
             int parameter_int = Integer.valueOf(parameter);
@@ -246,26 +290,25 @@ public class MainPage implements UserInterface {
     // HandleCommand class enables the JS Interface to start a new thread in
     // which to process commands from the user interface.
     // This means that the JavaBridge thread terminates quicker.
-    private class HandleCommand implements Runnable {
-    	private String command = null;
-    	private String parameter = null;
-    	private MainPage mainPage = null;
+//    private class HandleCommand implements Runnable {
+//    	private String command = null;
+//    	private String parameter = null;
+//    	private MainPage mainPage = null;
+//
+//    	public HandleCommand(
+//    			String command, String parameter, MainPage mainPage) {
+//    		this.command = command;
+//    		this.parameter = parameter;
+//    		this.mainPage = mainPage;
+//    	}
+//
+//    	@Override
+//    	public void run() {
+//    		mainPage.handleCommand(this.command, this.parameter);
+//    	}
+//    }
 
-    	public HandleCommand(
-    			String command, String parameter, MainPage mainPage) {
-    		this.command = command;
-    		this.parameter = parameter;
-    		this.mainPage = mainPage;
-    	}
-    	
-    	@Override
-    	public void run() { 
-    		mainPage.handleCommand(this.command, this.parameter);
-    	}
-    }
-
-    // JSObject class
-    // This is embedded in the web page.
+    // Endpoint of the Java bridge that is embedded in the web page.
     class MainPageJSInterface {
         private MainPage mainPage = null;
 
@@ -276,10 +319,18 @@ public class MainPage implements UserInterface {
 
         // Interface method called from the JS layer.
         @JavascriptInterface
-        public void command(String command, String parameter) {
-        	// Spawn a thread to process the command.
-        	new Thread(new HandleCommand(
-        			command, parameter, this.mainPage)).start();
+        public void command(final String command, final String parameter) {
+            // Spawn a thread to process the command.
+            // This means that the JavaBridge thread terminates quicker.
+
+//        	new Thread(new HandleCommand(
+//        			command, parameter, this.mainPage)).start();
+            (new Thread() {
+                @Override
+                public void run() {
+                    MainPageJSInterface.this.mainPage.handleCommand(command, parameter);
+                }
+            }).start();
         }
     }
     
@@ -316,7 +367,62 @@ public class MainPage implements UserInterface {
     private String commandHTML( String command, String label) {
         return _commandHTML(command, label, "null");
     }
-    
+    private String commandHTML( String command, String label, int location[]) {
+        StringBuilder value = new StringBuilder("'");
+        for (int i=0; i<location.length; i++) {
+            if (i>0) value.append(",");
+            value.append(location[i]);
+        }
+        value.append("'");
+        return _commandHTML( command, label, value.toString() );
+    }
+
+    private StringBuilder appendHTMLForPanelItem(StringBuilder stringBuilder,
+                                                 PanelItem panelItem,
+                                                 int location[])
+    {
+        stringBuilder.append("<span class=\"demo-item\">");
+        if (panelItem.label != null) {
+            switch (panelItem.type) {
+                case LABEL:
+                    stringBuilder.append("<span class=\"demo-label\">" + panelItem.label + "</span>");
+                    break;
+
+                case COMMANDON:
+                    stringBuilder.append(commandHTML("panel", panelItem.label + " &gt;", location) );
+                    break;
+
+                case COMMANDBACK:
+                    stringBuilder.append(commandHTML("panel", "&lt; " + panelItem.label, location) );
+                    break;
+            }
+        }
+        stringBuilder.append("</span>");
+        return stringBuilder;
+    }
+
+    private StringBuilder appendHTMLForPanel(StringBuilder stringBuilder,
+                                             Panel panel,
+                                             int panelNumber)
+    {
+        if (panel.demoPanelDivisionCount() <= 0) return stringBuilder;
+        stringBuilder.append("<div class=\"demo-panel\">");
+        int[] location = new int[3];
+        location[0] = panelNumber;
+        for (int division=0; division<panel.demoPanelDivisionCount(); division++) {
+            location[1] = division;
+            stringBuilder.append("<div class=\"demo-division\">");
+            for (int item=0; item<panel.demoPanelItemCount(division); item++) {
+                location[2] = item;
+                appendHTMLForPanelItem(stringBuilder, panel.panelItem(division, item), location);
+            }
+            stringBuilder.append("</div>");
+        }
+        stringBuilder.append("</div>");
+
+        return stringBuilder;
+    }
+
     // Class for scheduling the WebView load on the UI thread.
     @SuppressLint("SetJavaScriptEnabled")
     private class RunReloadHTML implements Runnable {
@@ -372,11 +478,11 @@ public class MainPage implements UserInterface {
                 "  .holder {" +
                 "      margin-top: 12pt;" +
                 "  }" +
-                "  div.picker {" +
+                "  div.picker, div.demo-panel {" +
                 "      margin-top: 12pt;" +
                 "      border-top: solid 1pt black;" +
                 "  }" +
-                "  div.picker div {" +
+                "  div.picker div, div.demo-division {" +
                 "      border-bottom: solid 1pt black;" +
                 "      padding-bottom: 8pt;" +
                 "  }" +
@@ -387,6 +493,7 @@ public class MainPage implements UserInterface {
                 "      padding: 4pt;" +
                 "      margin-right: 4pt;" +
                 "  }" +
+                "  span.demo-label { margin-right: 4pt; } " +
                 "  .information {" +
                 "      font-size: 8pt;" +
                 "  }" +
@@ -449,7 +556,7 @@ public class MainPage implements UserInterface {
                     commandHTML("save", "Save &gt;", ctrlname) + "</div>");
         }
         
-        for (int i=0; i<demos.size(); i++) {
+        if (demos != null) for (int i=0; i<demos.size(); i++) {
             Component demoi = demos.get(i);
             String executeLabel = demoi.getExecuteLabel();
             String switchLabel = demoi.demoGetSwitchLabel();
@@ -466,6 +573,10 @@ public class MainPage implements UserInterface {
             }
         }
 
+        if (panels != null) for (int panel=0; panel<panels.size(); panel++) {
+            appendHTMLForPanel(newPageHTML, panels.get(panel), panel);
+        }
+
         newPageHTML.append("</body></html>");
 
         pageHTML = newPageHTML.toString();
@@ -479,5 +590,9 @@ public class MainPage implements UserInterface {
         // pageHTML too.
         this.activity.runOnUiThread( new RunReloadHTML(this) );
     }
-    
+
+    public void refresh()
+    {
+        this.reloadHTML();
+    }
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,15 @@
 
 package com.good.example.contributor.jhawkins.demo;
 
+import com.good.gd.file.File;
+import com.good.gd.file.FileInputStream;
+import com.good.gd.file.FileOutputStream;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import com.good.gd.file.FileInputStream;
-import com.good.gd.file.FileOutputStream;
 
 public class Utility {
     
@@ -120,7 +121,17 @@ public class Utility {
         } catch (IOException e) {
             return "Could not read \"" + filepath + "\". " + e + "\n";
         }
-        return "Read " + bytes_read + " bytes OK \"" + str.toString() + "\".";
+        return "Read " + bytes_read + " bytes OK \"" + str.toString() + "\".\n";
     }
-    
+
+    public static File numberedFileIn(File directory, String stub, String extension)
+    {
+        for (int suffix=1; suffix<1000; suffix++) {
+            String filename = stub + String.format((Locale)null, "%04d", suffix) + "." + extension;
+            File path = new File(directory, filename);
+            if (!path.exists()) return path;
+        }
+        return null;
+    }
+
 }

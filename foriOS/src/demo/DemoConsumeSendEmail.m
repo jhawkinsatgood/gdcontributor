@@ -21,11 +21,11 @@
 
 #import "DemoConsumeSendEmail.h"
 
-#import "gdRequestSendEmail.h"
+#import "GdcServiceRequestSendEmail.h"
 #import "DemoUtility.h"
 
 @interface DemoConsumeSendEmail ()
-@property (strong, nonatomic) gdRequestSendEmail *request;
+@property (nonatomic) GdcServiceRequestSendEmail *request;
 @end
 
 @implementation DemoConsumeSendEmail
@@ -40,22 +40,23 @@
 }
 
 -(NSArray *)demoExecuteOrPickList {
-    if (self.request == nil) { self.request = [gdRequestSendEmail new]; }
+    if (self.request == nil) { self.request = [GdcServiceRequestSendEmail new]; }
     return [[self.request queryProviders] getProviderNames];
 }
 
 -(void)demoPickAndExecute:(int)pickListIndex
 {
-    if (self.request == nil) { self.request = [gdRequestSendEmail new]; }
+    if (self.request == nil) self.request = [GdcServiceRequestSendEmail new];
 
     // Create illustrative files for attachment.
-    NSArray *attachments = @[[NSStringFromClass([self class])
-                              stringByAppendingPathExtension:@"txt"],
-                             [NSStringFromClass([self class])
-                              stringByAppendingPathExtension:@"html"]];
+    NSString *stub = NSStringFromClass([self class]);
+    
+    NSArray *attachments = @[ [DemoUtility pathForStub:stub extension:@"txt"],
+                              [DemoUtility pathForStub:stub extension:@"html"]
+                              ];
 
     NSString *error = [DemoUtility createFilesOrError:attachments];
-    if (error && DEMOUI) [DEMOUI demoLogString:error];
+    if (error) [self.demoUserInterface demoLogString:error];
 
     [self.request selectProvider:pickListIndex];
     
@@ -80,7 +81,7 @@
     // The above returns a message if there is an error in the send. The
     // message is also inserted into the Request object, which is dumped
     // below, so there is no need to log it additionally.
-    if (DEMOUI) [DEMOUI demoLogFormat:@"Sent request:%@\n", self.request];
+    [self.demoUserInterface demoLogFormat:@"Sent request:%@\n", self.request];
     
     // Discard the request.
     self.request = nil;

@@ -20,12 +20,12 @@
  */
 
 #import "DemoConsumeTransferFile.h"
-#import "gdRequestTransferFile.h"
+#import "GdcServiceRequestTransferFile.h"
 
 #import "DemoUtility.h"
 
 @interface DemoConsumeTransferFile()
-@property (strong, nonatomic)gdRequestTransferFile *request;
+@property (nonatomic)GdcServiceRequestTransferFile *request;
 @end
 
 @implementation DemoConsumeTransferFile
@@ -40,20 +40,22 @@
 }
 
 -(NSArray *)demoExecuteOrPickList {
-    if (!self.request) self.request = [gdRequestTransferFile new];
+    if (!self.request) self.request = [GdcServiceRequestTransferFile new];
     return [[self.request queryProviders] getProviderNames];
 }
 
 -(void)demoPickAndExecute:(int)pickListIndex
 {
-    if (self.request == nil) self.request = [gdRequestTransferFile new];
+    if (self.request == nil) self.request = [GdcServiceRequestTransferFile new];
 
     // Generate a file for illustration purposes.
-    NSString *filename = [NSStringFromClass([self class])
-                          stringByAppendingPathExtension:@"txt"];
+    NSString *filename =
+    [DemoUtility pathForStub:NSStringFromClass([self class])
+                   extension:@"txt"];
+
     NSString *error = [DemoUtility createFileOrError:filename];
     if (error) {
-        if (DEMOUI) [DEMOUI demoLogString:error];
+        [self.demoUserInterface demoLogString:error];
         return;
     }
 
@@ -64,7 +66,7 @@
     // The above returns a message if there is an error in the send. The
     // message is also inserted into the Request object, which is dumped
     // below, so there is no need to log it additionally.
-    if (DEMOUI) [DEMOUI demoLogFormat:@"Sent request:%@\n", self.request];
+    [self.demoUserInterface demoLogFormat:@"Sent request:%@\n", self.request];
     
     // Discard the request.
     self.request = nil;

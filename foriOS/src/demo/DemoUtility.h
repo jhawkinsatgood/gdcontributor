@@ -25,6 +25,8 @@
 
 +(NSString *)simpleDate;
 
++(NSString *)documentsDirectory;
++(NSString *)pathForStub:(NSString *)stub extension:(NSString *)extension;
 +(NSString *)createFileOrError:(NSString *)filename content:(NSString *)content;
 +(NSString *)createFileOrError:(NSString *)filename;
 +(NSString *)copyFromResourceDirectoryOrError:(NSString *)directory
@@ -35,5 +37,9 @@
 +(NSString *)byteDump:(NSString *)filepath;
 
 +(NSArray *)dictionariesFromGDAppServers:(NSArray *)appServers;
+
++(NSString *)numberedFileIn:(NSString *)directory
+                       stub:(NSString *)stub
+                  extension:(NSString *)extension;
 
 @end
