@@ -37,7 +37,6 @@ function usage()
     echoColor $COLOR_CYAN "Usage:"
     echoColor $COLOR_MAGENTA "$0"
     echoColor $COLOR_MAGENTA "   -g <Organization Name> (your company's/organization's name)"
-    echoColor $COLOR_MAGENTA "   -i <Application Package> (com.application.package)"
     echoColor $COLOR_MAGENTA "   -n <Application Name> (ApplicationName)"
     echoColor $COLOR_MAGENTA "   -p <Path to Project>"
 }
@@ -119,28 +118,6 @@ function parseOptions()
 
                 continue
                 ;;
-            -i)
-                if [ -z "$2" ] || [ "$2" = "" ] || [ "$2" = "-g" ] || [ "$2" = "-p" ] || [ "$2" = "-n" ]; then
-                    echoColor $COLOR_RED "Application Package must have a value."
-                    usage
-                    exit
-                fi
-
-                APPLICATION_PACKAGE="$2"
-
-                noSpecialCharsAppName=`echo "${APPLICATION_PACKAGE}" | sed 's/[^a-z0-9\.]//g'`
-
-                if [[ "${noSpecialCharsAppName}" != "${APPLICATION_PACKAGE}" ]]; then
-                    echoColor $COLOR_RED "Application package (${APPLICATION_PACKAGE}) cannot contain special characters.  Only small letters, numbers, and the '.' character."
-                    usage
-                    exit
-                fi
-
-                # Shift to next parameter.  
-                shift;shift;
-
-                continue
-                ;;
             --)                                                                 
                 # no more arguments to parse                                
                 break      
@@ -164,16 +141,16 @@ function parseOptions()
         usage
         exit
     fi
-    if [[ "${APPLICATION_PACKAGE}" == "" ]]; then
-        echoColor $COLOR_RED "No option specified for Application Package."
-        usage
-        exit
-    fi
     if [[ "${APPLICATION_NAME}" == "" ]]; then
         echoColor $COLOR_RED "No option specified for Application Name."
         usage
         exit
     fi
+}
+
+function getApplicationPackage()
+{
+    APPLICATION_PACKAGE=$(echo 'cat //manifest/@package' | xmllint --shell "${PROJECT_PATH}/AndroidManifest.xml" | awk -F'[="]' '!/>/{print $(NF-1)}')
 }
 
 function changeRootFiles()
@@ -242,13 +219,16 @@ function addDependencies()
     #cd "$ORIGINAL_PATH"
     #cd ..
     cd "$ANDROID_HOME/extras/good/dynamics_sdk/libs/handheld/"
+
     if ! [ -d "./gd" ]; then
         echoColor $COLOR_RED "Can't find GD Core library in path - `pwd`"
         exit
     fi
     cp -Rf "gd" "$PROJECT_PATH/"
-    chmod -R u+w "$PROJECT_PATH/gd"
     > "$PROJECT_PATH/project.properties"
+
+    chmod -R u+w "$PROJECT_PATH/gd"
+
     cat "$ORIGINAL_PATH/Files/application.properties" >> "$PROJECT_PATH/project.properties"
     rm -rf "$PROJECT_PATH/project.properties-e"
     rm -rf "$PROJECT_PATH/gd/backup"
@@ -266,7 +246,7 @@ function parseXml()
     fi
     PLUGINS_TMP="${PLUGINS_TMP}/gdenableplugins$$/"
     cp -r "$PROJECT_PATH/../../plugins" "$PLUGINS_TMP"
-    
+
     #Gettings array of previously installed plugins
     local PLUGINS=`grep -ro '<param[ \t].*value="\([^"]*\)"' "$PROJECT_PATH/res/xml/config.xml" | grep -o 'value="[^"]*"' | cut -f2 -d'"'`
 
@@ -316,12 +296,37 @@ function parseHtml()
     rm -rf "$WWW_PATH/index.html-e"
 }
 
+function enableGradle()
+{
+    #Check if CordovaLib module has Gradle support.
+    if [ ! -f "$PROJECT_PATH/CordovaLib/build.gradle" ]; then
+        exit
+    fi
+
+    echoColor $COLOR_YELLOW "Adding Gradle files.." 
+
+    #Check if project already has settings.gradle
+    if [ ! -f "$PROJECT_PATH/settings.gradle" ]; then
+        cp  "$ORIGINAL_PATH/Files/settings.gradle" "$PROJECT_PATH/settings.gradle" 
+    fi
+
+    #Check cordova project structure style
+    if [ ! -f "$PROJECT_PATH/CordovaLib/cordova.gradle" ]; then
+        cp -rf "$ORIGINAL_PATH/Files/build_3.6.gradle" "$PROJECT_PATH/build.gradle"
+        cp -rf "$ORIGINAL_PATH/Files/CordovaLib_3.6.gradle" "$PROJECT_PATH/CordovaLib/build.gradle"
+    else 
+        cp -rf "$ORIGINAL_PATH/Files/build.gradle" "$PROJECT_PATH/build.gradle"
+    fi
+}
+
 parseOptions "$@"
+getApplicationPackage
 changeRootFiles
 changeSourcesFolder
 changeAssetsFolder
 addDependencies
 parseXml
 parseHtml
+enableGradle
 
 echoColor $COLOR_GREEN "Successfully updated app."
