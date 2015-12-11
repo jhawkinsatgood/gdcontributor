@@ -70,6 +70,26 @@ function setAndroidDir()
     cd "$SAVE_DIR"
 }
 
+function syncWWW()
+{
+    SYNC_FROM="$1"
+    shift
+    SYNC_TO="$1"
+    shift
+
+    # Create any directories that exist in the source, but not in the target.
+    find "$SYNC_FROM" -not -path '*/plugins/*' -type d \
+        -exec test '!' -d "$SYNC_TO/"{} \; \
+        -exec mkdir "$SYNC_TO/"{} \; \
+        -print
+
+    # Copy any files that are newer than the root. The calling code has to set
+    # the modification time of the root so that there is no wasteful copying.
+    find "$SYNC_FROM" -not -path '*/plugins/*' -type f \
+        '(' -newer "$SYNC_FROM" -or -exec test '!' -f "$SYNC_TO/"{} \; ')' \
+        -exec cp {} "$SYNC_TO/"{} \; \
+        -print
+}
 
 function rebuild()
 {
@@ -83,8 +103,8 @@ function rebuild()
     fi
 
     # Uncomment the following to remove and re-add the code plugin
-    #cordova plugin remove com.good.example.contributor.jhawkins
-    #cordova plugin add ../../src/com.good.example.contributor.jhawkins
+    cordova plugin remove com.good.example.contributor.jhawkins
+    cordova plugin add ../../src/com.good.example.contributor.jhawkins
 
     # Uncomment the following to refresh the source from the original.
     #echo "Reloading www/ from original."
@@ -102,8 +122,8 @@ function rebuild()
 
     # Uncomment the following to remove and re-add the file plugin, which can
     # resolve some issues.
-    cordova plugin remove org.apache.cordova.file
-    cordova plugin add org.apache.cordova.file --searchpath "$PLUGINS_TMP"
+    #cordova plugin remove org.apache.cordova.file
+    #cordova plugin add org.apache.cordova.file --searchpath "$PLUGINS_TMP"
     
     # Remove temporary copy of the plugins.
     rm -rf "$PLUGINS_TMP"
@@ -111,18 +131,22 @@ function rebuild()
     if test -d platforms/android ;
     then
         echo "Synchronising asset files for Android"
-        cp -R www/ platforms/android/assets/www/
+        syncWWW www platforms/android/assets
         DID="${DID} Android"
     fi
     if test -d platforms/ios ;
     then
         echo "Synchronising asset files for iOS"
-        cp -R www/ platforms/ios/www/
+        syncWWW www platforms/ios
         DID="${DID} iOS"
     fi
     if test -z "$DID" ;
     then
         echo "Nothing to rebuild"
+    else
+        # Set the modification time of the www/ directory to prevent wasteful
+        # copying.
+        touch www
     fi
     cd "$SAVE_DIR"
 }
@@ -133,10 +157,33 @@ function create()
     # Create a cordova project and copy in the sample application source.
     cordova create "$APP_NAME" "$APP_ID" "$APP_NAME" \
         --copy-from "../src/${APP_ID}/www/"
-    
+
     # Change to the new project directory.
     cd "$APP_NAME"
     
+    # Add the required platforms.
+    #
+    # An error like the following might be encountered here if the files in the
+    # demo code plugin are read-only.
+    # cp: copyFileSync: could not write to dest file (code=EACCES):
+    # some/path/gdcontributor/samples/AppKinetics Workflow/platforms/android/
+    # assets/www/css/com.good.example.contributor.jhawkins/demo/mainpage.css
+    #
+    # An error like the following might be encountered here if the files in the
+    # --copy-from directory are read-only.
+    # cp: platforms/ios/www/index.html: Permission denied
+    #
+    if test -n "$CREATE_ANDROID" ;
+    then
+        cordova platform add android
+    fi
+    if test -n "$CREATE_IOS" ;
+    then
+        cordova platform add ios
+    fi
+    # From this point onwards, the presence of platform sub-directories is used
+    # to determine the need to do processing for each platform.
+
     # Add some typical plugins.
     # Use these when connected to the Internet
     cordova plugin add org.apache.cordova.device \
@@ -150,18 +197,6 @@ function create()
     # Add the demo code, which is provided as a plugin.
     cordova plugin add ../../src/com.good.example.contributor.jhawkins
     
-    # Add the required platforms.
-    if test -n "$CREATE_ANDROID" ;
-    then
-        cordova platform add android
-    fi
-    if test -n "$CREATE_IOS" ;
-    then
-        cordova platform add ios
-    fi
-    # From this point onwards, the presence of platform sub-directories is used
-    # to determine the need to do processing for each platform.
-
     # Save the project directory
     export PROJECT_DIR="$PWD"
 
@@ -180,53 +215,44 @@ function create()
     # relatively.
     cd ..
     
+    # Something bad seems to happen if we do android then iOS. So we do iOS then
+    # android.
+    if test -d "${APP_NAME}/platforms/ios" ;
+    then
+        # Enable GD for iOS
+        cd "${GD_PLUGIN_DIR}/iOS/SampleApplications/UpdateApp-Cordova/"
+        ENABLESH='./FIXEDgdEnableApp.sh'
+        if test '!' -f "$ENABLESH" ;
+        then
+            echo 'No FIXED script for iOS. Assuming fixed version was installed.'
+            ENABLESH='./gdEnableApp.sh'
+        fi
+        bash "$ENABLESH" -c "$APP_ID_PREFIX" -g "$ORGANISATION_NAME" \
+            -i "$APP_ID" -p "${PROJECT_DIR}/platforms/ios/"
+        
+        cd "$PROJECT_DIR"
+
+        echo "Fixing deployment target, if necessary."
+        sed -i \
+            -e 's/IPHONEOS_DEPLOYMENT_TARGET = 5\.0;/IPHONEOS_DEPLOYMENT_TARGET = 6.0;/g' \
+            "platforms/ios/${APP_NAME}.xcodeproj/project.pbxproj"
+
+        # Switch back to initial directory
+        cd ..
+    fi
+    
     if test -d "${APP_NAME}/platforms/android" ;
     then
         # Enable GD for Android
-        cd "${GD_PLUGIN_DIR}/Android/GDCordova3x/"
+        cd "${GD_PLUGIN_DIR}/Android/GDCordova/"
     
         bash ./FIXEDgdEnableApp.sh \
-            -n "$APP_ID_PREFIX" \
+            -n "$APP_ID" \
             -g "$ORGANISATION_NAME" \
-            -i "$APP_ID" \
             -p "${PROJECT_DIR}/platforms/android/"
 
         # Fix up the project files created by the enable script.
         cd "${PROJECT_DIR}"
-
-        # Remove and add back all the plugins, from the temporary copy.
-        cordova plugin rm $PLUGINS
-        cordova plugin add $PLUGINS --searchpath "$PLUGINS_TMP"
-
-        echo "Fixing project.properties file."
-        # Enable Android manifest merging
-        echo 'manifestmerger.enabled=true' >> platforms/android/project.properties
-        
-        echo "Replacing project duplicate of the GD SDK for Android."
-        rm -r platforms/android/gd
-        mkdir platforms/android/com.good.gd
-        cp -r "$GD_ANDROID_DIR" platforms/android/com.good.gd/dynamics_sdk
-        chmod -R u+wx platforms/android/com.good.gd
-
-        # Create the directory for compiler output.
-        mkdir platforms/android/output
-
-        copyIDEATemplate "../../src/${APP_ID}/template" "platforms/android/"
-    
-        echo "Overwriting settings.json file."
-        cat >platforms/android/assets/settings.json <<SETTINGS.JSON
-{
-    "GDApplicationID":"$APP_ID",
-    "GDApplicationVersion":"1.0.0.0",
-    "GDLibraryMode": "GDEnterprise",
-    "GDConsoleLogger": [
-        "GDFilterErrors",
-        "GDFilterWarnings",
-        "GDFilterInfo",
-        "GDFilterDetailed",
-    ]
-}
-SETTINGS.JSON
 
         cat <<'MANIFEST.NOTE'
 
@@ -240,133 +266,14 @@ the <application> item.
 
 MANIFEST.NOTE
 
-        echo "Changing project name in .project file"
-        sed -i -e 's/>'"$APP_NAME"'</>'"$APP_NAME"' (PhoneGap)</' platforms/android/.project
-        
         # Switch back to initial directory
         cd ..
     fi
 
-    if test -d "${APP_NAME}/platforms/ios" ;
-    then
-        # Enable GD for iOS
-        cd "${GD_PLUGIN_DIR}/iOS/SampleApplications/UpdateApp-Cordova3x/"
-        ENABLESH='./FIXEDgdEnableApp.sh'
-        if test '!' -f "$ENABLESH" ;
-        then
-            echo 'No FIXED script for iOS. Assuming fixed version was installed.'
-            ENABLESH='./gdEnableApp.sh'
-        fi
-        bash "$ENABLESH" -c "$APP_ID_PREFIX" -g "$ORGANISATION_NAME" \
-            -i "$APP_ID" -p "${PROJECT_DIR}/platforms/ios/"
-        
-        cd "$PROJECT_DIR"
-
-        echo "Refreshing contributor plugin to fix Info.plist file."
-        cordova plugin remove com.good.example.contributor.jhawkins
-        cordova plugin add ../../src/com.good.example.contributor.jhawkins
-
-        echo "Fixing deployment target, if necessary."
-        sed -i \
-            -e 's/IPHONEOS_DEPLOYMENT_TARGET = 5\.0;/IPHONEOS_DEPLOYMENT_TARGET = 6.0;/g' \
-            "platforms/ios/${APP_NAME}.xcodeproj/project.pbxproj"
-        
-        cat <<ARCHITECTURES.NOTE
-
-Sorry, this script does not fix the Architectures and Valid Architectures in
-the project for iOS. You might need to do that yourself, in Xcode, before
-building for iOS.
-
-ARCHITECTURES.NOTE
-        # Switch back to initial directory
-        cd ..
-    fi
-    
     # Remove temporary copy of the plugins.
     rm -rf "$PLUGINS_TMP"
 }
 # create()
-function copyIDEATemplate
-{
-    local SRC_PATH="$1"
-    shift
-    local DEST_PATH="$1"
-    shift
-    
-    echo 'Copying IDEA template.'
-    ls -la "$DEST_PATH/libs"
-
-    cp -r "$SRC_PATH/android.idea/" $DEST_PATH/.idea
-    chmod -R u+wx $DEST_PATH/.idea
-    # printf is more portable than echo -n
-    printf "$APP_NAME" > "$DEST_PATH/.idea/.name"
-
-    # Overwrite the android.iml file with something that includes all the files
-    # that happen to be in the android/libs directory.
-    #
-    # Preamble ...
-    cat >"$DEST_PATH/.idea/android.iml" <<'ANDROID.IML'
-<?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4">
-  <component name="FacetManager">
-    <facet type="android" name="Android">
-      <configuration>
-        <option name="GEN_FOLDER_RELATIVE_PATH_APT" value="/../../android/gen" />
-        <option name="GEN_FOLDER_RELATIVE_PATH_AIDL" value="/../../android/gen" />
-        <option name="MANIFEST_FILE_RELATIVE_PATH" value="/../../android/AndroidManifest.xml" />
-        <option name="RES_FOLDER_RELATIVE_PATH" value="/../../android/res" />
-        <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/../../android/assets" />
-        <option name="LIBS_FOLDER_RELATIVE_PATH" value="/../../android/libs" />
-        <option name="PROGUARD_LOGS_FOLDER_RELATIVE_PATH" value="/../../android/proguard_logs" />
-        <option name="ENABLE_MANIFEST_MERGING" value="true" />
-      </configuration>
-    </facet>
-  </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
-    <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
-    </content>
-    <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
-    <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="CordovaLib" exported="" />
-    <orderEntry type="module" module-name="gdHandheld" exported="" />
-ANDROID.IML
-    #
-    # ... per file part ...
-    local LIB_FILES=`ls "$DEST_PATH/libs"`
-    #
-    for LIB_FILE in $LIB_FILES
-    do
-        cat >>"$DEST_PATH/.idea/android.iml" <<ANDROID.IML
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://\$MODULE_DIR\$/libs/${LIB_FILE}!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-ANDROID.IML
-    done
-    #
-    # ... end of the file.
-    cat >>"$DEST_PATH/.idea/android.iml" <<'ANDROID.IML'
-  </component>
-</module>
-ANDROID.IML
-
-    cp "$SRC_PATH/CordovaLib.iml" \
-        $DEST_PATH/CordovaLib/CordovaLib.iml
-    cp "$SRC_PATH/gdHandheld.iml" \
-        $DEST_PATH/com.good.gd/dynamics_sdk/libs/handheld/gd/gdHandheld.iml
-    chmod u+w \
-        $DEST_PATH/CordovaLib/CordovaLib.iml \
-        $DEST_PATH/com.good.gd/dynamics_sdk/libs/handheld/gd/gdHandheld.iml
-}
-# copyIDEATemplate()
 
 if test $# '>' 0;
 then
@@ -405,7 +312,6 @@ GD_PLUGIN_DIR.BLANK
     if test -z "$ERROR";
     then
         create
-        rebuild
     else
         # One or more error messages will have been printed already.
         exit 1

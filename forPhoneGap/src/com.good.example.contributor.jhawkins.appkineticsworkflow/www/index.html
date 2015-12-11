@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-Copyright (c) 2014 Good Technology Corporation
+Copyright (c) 2015 Good Technology Corporation
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,10 @@ THE SOFTWARE.
 <html>
 <head>
     <title>AppKinetics Workflow</title>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <meta
-        name="viewport"
-        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width;" />
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
     <link
         rel="stylesheet"
         type="text/css"
@@ -35,7 +35,8 @@ THE SOFTWARE.
         #mainpage { background-color: DarkSeaGreen; }
     </style>
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-    <script type="text/javascript" charset="utf-8" src="GoodDynamics.js"></script>
+    <!-- GoodDynamics.js include will be added here automatically -->
+    <!-- script type="text/javascript" src="GoodDynamics.js"></script -->
     <script type="text/javascript" charset="utf-8">
         window.onerror = function(msg, url, line) {
             alert('ERROR in file "' + url.split('/').slice(-1) + '" line: ' +
@@ -54,7 +55,7 @@ THE SOFTWARE.
             ).setTitle( Utility.documentTitle()
             ).setInformation(
                 version + " GD Runtime via plugin," +
-                ' "' + device.cordova + '" Cordova.'
+                ' "' + device.cordova + '" Cordova for ' + device.platform +'.'
             ).setWebView("mainpage").load();
             
             var mainPageHolder =

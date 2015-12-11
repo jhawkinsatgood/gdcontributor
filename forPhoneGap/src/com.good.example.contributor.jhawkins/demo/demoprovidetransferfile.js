@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Good Technology Corporation
+/* Copyright (c) 2015 Good Technology Corporation
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -94,7 +94,7 @@ function (namespace) {
             window.plugins.GDAppKineticsPlugin.readyToProvideService(
                 request.serviceId, request.serviceVersion,
                 function(receivedRequest) {
-                    if (receivedRequest != "OK") {
+                    if (receivedRequest != "OK" && receivedRequest != null) {
                         logger("receivedRequest:", receivedRequest);
                     }
                 },
