@@ -101,6 +101,12 @@
       "idiom" : "ipad",
       "filename" : "mediacaptureicon152x152_xcf.png",
       "scale" : "2x"
+    },
+    {
+      "size" : "83.5x83.5",
+      "idiom" : "ipad",
+      "filename" : "mediacaptureicon167x167_xcf.png",
+      "scale" : "2x"
     }
   ],
   "info" : {

@@ -13,6 +13,7 @@
 		812831E01BD94A0300B2E23F /* DemoKeychainUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 812831DF1BD94A0300B2E23F /* DemoKeychainUtility.m */; };
 		812831E21BD94CBB00B2E23F /* DemoPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 812831E11BD94CBB00B2E23F /* DemoPanel.m */; };
 		8172529B1B9D930100737364 /* GdcRuntimeDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 8172529A1B9D930100737364 /* GdcRuntimeDispatcher.m */; };
+		8176F4D21C1BA0E4004A4ECD /* AppKinetics Workflow.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 8176F4D11C1BA0E4004A4ECD /* AppKinetics Workflow.entitlements */; };
 		817B2D431B1F0C6000A1D25E /* DemoTicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 817B2D421B1F0C6000A1D25E /* DemoTicker.m */; };
 		817CDCD71AE855570066B73B /* GdcServiceDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 817CDC6F1AE855570066B73B /* GdcServiceDispatcher.m */; };
 		817CDCD81AE855570066B73B /* GdcServiceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 817CDC711AE855570066B73B /* GdcServiceProvider.m */; };
@@ -33,11 +34,11 @@
 		819683331AE8685F00E8BF5E /* GdcServiceRequestPlayBackgroundSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 819683321AE8685F00E8BF5E /* GdcServiceRequestPlayBackgroundSound.m */; };
 		81978E1A1AE885E7002B4E13 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 81978E191AE885E7002B4E13 /* sounds */; };
 		81CA69601A77FD2300EBF7D1 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CA695F1A77FD2300EBF7D1 /* LocalAuthentication.framework */; };
-		81CB20F119713E1900733EAE /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CB20EC19713E1900733EAE /* libstdc++.dylib */; };
-		81CB20F219713E1900733EAE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CB20ED19713E1900733EAE /* libz.dylib */; };
 		81CB20F319713E1900733EAE /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CB20EE19713E1900733EAE /* MessageUI.framework */; };
 		81CB20F419713E1900733EAE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CB20EF19713E1900733EAE /* MobileCoreServices.framework */; };
 		81CB20F519713E1900733EAE /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CB20F019713E1900733EAE /* QuickLook.framework */; };
+		81DAE5EF1C58118B005C8EFA /* libstdc++.6.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 81DAE5EE1C58118B005C8EFA /* libstdc++.6.tbd */; };
+		81DAE5F11C581195005C8EFA /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 81DAE5F01C581195005C8EFA /* libz.tbd */; };
 		9228072B198A8D680033F4B0 /* MainPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9228072A198A8D680033F4B0 /* MainPageViewController.m */; };
 		92C96BB51922096A0092DBE8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92C96BB41922096A0092DBE8 /* Foundation.framework */; };
 		92C96BB71922096A0092DBE8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92C96BB61922096A0092DBE8 /* CoreGraphics.framework */; };
@@ -69,6 +70,7 @@
 		817252981B9D92EB00737364 /* DemoPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoPanel.h; sourceTree = "<group>"; };
 		817252991B9D930100737364 /* GdcRuntimeDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GdcRuntimeDispatcher.h; sourceTree = "<group>"; };
 		8172529A1B9D930100737364 /* GdcRuntimeDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GdcRuntimeDispatcher.m; sourceTree = "<group>"; };
+		8176F4D11C1BA0E4004A4ECD /* AppKinetics Workflow.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "AppKinetics Workflow.entitlements"; sourceTree = "<group>"; };
 		817B2D411B1F0C6000A1D25E /* DemoTicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoTicker.h; sourceTree = "<group>"; };
 		817B2D421B1F0C6000A1D25E /* DemoTicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoTicker.m; sourceTree = "<group>"; };
 		817CDC6E1AE855570066B73B /* GdcServiceDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GdcServiceDispatcher.h; sourceTree = "<group>"; };
@@ -109,12 +111,13 @@
 		819683321AE8685F00E8BF5E /* GdcServiceRequestPlayBackgroundSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GdcServiceRequestPlayBackgroundSound.m; sourceTree = "<group>"; };
 		81978E191AE885E7002B4E13 /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sounds; path = "AppKinetics Workflow/sounds"; sourceTree = "<group>"; };
 		81CA695F1A77FD2300EBF7D1 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
-		81CB20EC19713E1900733EAE /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
-		81CB20ED19713E1900733EAE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		81CB20EE19713E1900733EAE /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		81CB20EF19713E1900733EAE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		81CB20F019713E1900733EAE /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		81CB20F619713FB800733EAE /* default.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = default.xcconfig; sourceTree = "<group>"; };
+		81DAE5EE1C58118B005C8EFA /* libstdc++.6.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.tbd"; path = "usr/lib/libstdc++.6.tbd"; sourceTree = SDKROOT; };
+		81DAE5F01C581195005C8EFA /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		81FCEEE41C1B9ADC0056FA20 /* swift.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = swift.xcconfig; sourceTree = "<group>"; };
 		92280729198A8D680033F4B0 /* MainPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainPageViewController.h; sourceTree = "<group>"; };
 		9228072A198A8D680033F4B0 /* MainPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainPageViewController.m; sourceTree = "<group>"; };
 		92C96BB11922096A0092DBE8 /* AppKinetics Workflow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AppKinetics Workflow.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -145,9 +148,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81DAE5F11C581195005C8EFA /* libz.tbd in Frameworks */,
+				81DAE5EF1C58118B005C8EFA /* libstdc++.6.tbd in Frameworks */,
 				81CA69601A77FD2300EBF7D1 /* LocalAuthentication.framework in Frameworks */,
-				81CB20F119713E1900733EAE /* libstdc++.dylib in Frameworks */,
-				81CB20F219713E1900733EAE /* libz.dylib in Frameworks */,
 				81CB20F319713E1900733EAE /* MessageUI.framework in Frameworks */,
 				81CB20F419713E1900733EAE /* MobileCoreServices.framework in Frameworks */,
 				81CB20F519713E1900733EAE /* QuickLook.framework in Frameworks */,
@@ -188,12 +191,12 @@
 		817CDC6B1AE855570066B73B /* src */ = {
 			isa = PBXGroup;
 			children = (
-				812831D81BD9466B00B2E23F /* system */,
 				817CDC6C1AE855570066B73B /* appkinetics */,
 				817CDC8A1AE855570066B73B /* demo */,
 				817CDCAB1AE855570066B73B /* demoframework */,
 				817CDCB01AE855570066B73B /* gdruntime */,
 				817CDCB31AE855570066B73B /* pathstore */,
+				812831D81BD9466B00B2E23F /* system */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -315,9 +318,9 @@
 		92C96BB31922096A0092DBE8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				81DAE5F01C581195005C8EFA /* libz.tbd */,
+				81DAE5EE1C58118B005C8EFA /* libstdc++.6.tbd */,
 				81CA695F1A77FD2300EBF7D1 /* LocalAuthentication.framework */,
-				81CB20EC19713E1900733EAE /* libstdc++.dylib */,
-				81CB20ED19713E1900733EAE /* libz.dylib */,
 				81CB20EE19713E1900733EAE /* MessageUI.framework */,
 				81CB20EF19713E1900733EAE /* MobileCoreServices.framework */,
 				81CB20F019713E1900733EAE /* QuickLook.framework */,
@@ -339,6 +342,7 @@
 		92C96BCA1922096A0092DBE8 /* AppKinetics Workflow */ = {
 			isa = PBXGroup;
 			children = (
+				8176F4D11C1BA0E4004A4ECD /* AppKinetics Workflow.entitlements */,
 				817CDC2C1AE855570066B73B /* gdcontributor */,
 				92C96BD31922096A0092DBE8 /* AppDelegate.h */,
 				92C96BD41922096A0092DBE8 /* AppDelegate.m */,
@@ -356,8 +360,9 @@
 		92C96BCB1922096A0092DBE8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				81CB20F619713FB800733EAE /* default.xcconfig */,
 				8151CB2E1A16694C00CC6E70 /* Info.plist */,
+				81CB20F619713FB800733EAE /* default.xcconfig */,
+				81FCEEE41C1B9ADC0056FA20 /* swift.xcconfig */,
 				92C96BCD1922096A0092DBE8 /* InfoPlist.strings */,
 				92C96BD01922096A0092DBE8 /* main.m */,
 				92C96BD21922096A0092DBE8 /* AppKinetics Workflow-Prefix.pch */,
@@ -400,11 +405,17 @@
 		92C96BA91922096A0092DBE8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0640;
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Good Technology";
 				TargetAttributes = {
 					92C96BB01922096A0092DBE8 = {
 						DevelopmentTeam = S99QSEYL6F;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -434,6 +445,7 @@
 				8102E3B01B4C1EC20005728E /* Main.storyboard in Resources */,
 				92C96C0219220CB80092DBE8 /* GDAssets.bundle in Resources */,
 				81978E1A1AE885E7002B4E13 /* sounds in Resources */,
+				8176F4D21C1BA0E4004A4ECD /* AppKinetics Workflow.entitlements in Resources */,
 				8102E3E81B4C5FAC0005728E /* LaunchScreen.xib in Resources */,
 				92C96C6C1922268C0092DBE8 /* workflowlogo_xcf.png in Resources */,
 				92C96BE31922096B0092DBE8 /* Images.xcassets in Resources */,
@@ -508,6 +520,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -524,7 +538,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -550,6 +564,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = "";
@@ -560,7 +575,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -576,14 +591,31 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "AppKinetics Workflow/AppKinetics Workflow.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppKinetics Workflow/AppKinetics Workflow-Prefix.pch";
 				INFOPLIST_FILE = "AppKinetics Workflow/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					../../Launcher,
+				);
 				OTHER_LDFLAGS = (
 					"-lstdc++",
 					"-lz",
+					"-ObjC",
+					"-B",
+					"${LDUTILDIR}",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.good.example.contributor.jhawkins.appkineticsworkflow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -595,14 +627,30 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "AppKinetics Workflow/AppKinetics Workflow.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppKinetics Workflow/AppKinetics Workflow-Prefix.pch";
 				INFOPLIST_FILE = "AppKinetics Workflow/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					../../Launcher,
+				);
 				OTHER_LDFLAGS = (
 					"-lstdc++",
 					"-lz",
+					"-ObjC",
+					"-B",
+					"${LDUTILDIR}",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.good.example.contributor.jhawkins.appkineticsworkflow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

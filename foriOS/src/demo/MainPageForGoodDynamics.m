@@ -92,10 +92,23 @@
                                           bundle:nil];
                 self.hasLoadedStoryBoard = YES;
                 
-                // Next line kicks off loading of the view controller, which
-                // will in turn result in the uiWebView property being set.
-                self.uiApplicationDelegate.window.rootViewController =
+                UIViewController *initialViewController =
                 [uiStoryboard instantiateInitialViewController];
+#ifdef WITH_GD_LAUNCHER
+                GTLauncherViewController *launcherViewController =
+                [[GTLauncherViewController alloc]
+                 initWithBaseViewController:initialViewController];
+                launcherViewController.delegate = self;
+                
+                self.uiApplicationDelegate.window.rootViewController =
+                launcherViewController;
+#else
+                self.uiApplicationDelegate.window.rootViewController =
+                initialViewController;
+#endif
+                // Previous line kicks off loading of the view controller, which
+                // will in turn result in the uiWebView property being set.
+                
             }
             // If the end user has authorised, but there is no uiWebView, and
             // there is no storyboard specified or the storyboard is already

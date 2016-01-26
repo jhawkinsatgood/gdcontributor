@@ -11,7 +11,10 @@
 		8102E3E61B4C27290005728E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8102E3E51B4C27290005728E /* LaunchScreen.xib */; };
 		8108267619B8C8740022EE85 /* DemoApplicationConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 8108267519B8C8740022EE85 /* DemoApplicationConfiguration.m */; };
 		8108267919B9FFAB0022EE85 /* DemoAuthenticationToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 8108267819B9FFAB0022EE85 /* DemoAuthenticationToken.m */; };
+		810EED861C569BDE002777BF /* libstdc++.6.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 810EED851C569BDE002777BF /* libstdc++.6.tbd */; };
+		810EED881C569BE8002777BF /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 810EED871C569BE8002777BF /* libz.tbd */; };
 		8175955D19B63B0200696F2B /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8175955C19B63B0200696F2B /* readme.txt */; };
+		8176F4D51C1BA873004A4ECD /* Enterprise.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 8176F4D41C1BA873004A4ECD /* Enterprise.entitlements */; };
 		8179811F1B46A47200A16065 /* GD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8179811E1B46A47200A16065 /* GD.framework */; };
 		817981211B46A49500A16065 /* GDAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 817981201B46A49500A16065 /* GDAssets.bundle */; };
 		81A1D9FC1B9A701F0092CD78 /* GdcRuntimeDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 81A1D9FB1B9A701F0092CD78 /* GdcRuntimeDispatcher.m */; };
@@ -48,8 +51,11 @@
 		8108267519B8C8740022EE85 /* DemoApplicationConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoApplicationConfiguration.m; sourceTree = "<group>"; };
 		8108267719B9FFAB0022EE85 /* DemoAuthenticationToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAuthenticationToken.h; sourceTree = "<group>"; };
 		8108267819B9FFAB0022EE85 /* DemoAuthenticationToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAuthenticationToken.m; sourceTree = "<group>"; };
+		810EED851C569BDE002777BF /* libstdc++.6.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.tbd"; path = "usr/lib/libstdc++.6.tbd"; sourceTree = SDKROOT; };
+		810EED871C569BE8002777BF /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		8158048E1A1A120E00847520 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8175955C19B63B0200696F2B /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = readme.txt; path = Enterprise/readme.txt; sourceTree = "<group>"; };
+		8176F4D41C1BA873004A4ECD /* Enterprise.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Enterprise.entitlements; sourceTree = "<group>"; };
 		8179811E1B46A47200A16065 /* GD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GD.framework; path = System/Library/Frameworks/GD.framework; sourceTree = SDKROOT; };
 		817981201B46A49500A16065 /* GDAssets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GDAssets.bundle; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GD.framework/Resources/GDAssets.bundle; sourceTree = DEVELOPER_DIR; };
 		81A1D9F91B9A6FFF0092CD78 /* DemoPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoPanel.h; sourceTree = "<group>"; };
@@ -98,6 +104,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				810EED881C569BE8002777BF /* libz.tbd in Frameworks */,
+				810EED861C569BDE002777BF /* libstdc++.6.tbd in Frameworks */,
 				8179811F1B46A47200A16065 /* GD.framework in Frameworks */,
 				81CA69621A7806EA00EBF7D1 /* LocalAuthentication.framework in Frameworks */,
 				81AB432B19B611A000BC9E53 /* CFNetwork.framework in Frameworks */,
@@ -139,6 +147,8 @@
 		81AB431919B611A000BC9E53 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				810EED871C569BE8002777BF /* libz.tbd */,
+				810EED851C569BDE002777BF /* libstdc++.6.tbd */,
 				8179811E1B46A47200A16065 /* GD.framework */,
 				81CA69611A7806EA00EBF7D1 /* LocalAuthentication.framework */,
 				81AB432A19B611A000BC9E53 /* CFNetwork.framework */,
@@ -160,6 +170,7 @@
 		81AB433619B611A000BC9E53 /* Enterprise */ = {
 			isa = PBXGroup;
 			children = (
+				8176F4D41C1BA873004A4ECD /* Enterprise.entitlements */,
 				81AB43AF19B61AE000BC9E53 /* gdcontributor */,
 				81AB433F19B611A000BC9E53 /* AppDelegate.h */,
 				81AB434019B611A000BC9E53 /* AppDelegate.m */,
@@ -280,8 +291,17 @@
 		81AB430F19B611A000BC9E53 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Good Technology";
+				TargetAttributes = {
+					81AB431619B611A000BC9E53 = {
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = 81AB431219B611A000BC9E53 /* Build configuration list for PBXProject "Enterprise" */;
 			compatibilityVersion = "Xcode 6.3";
@@ -308,6 +328,7 @@
 			files = (
 				8102E3B21B4C1FE00005728E /* Main.storyboard in Resources */,
 				817981211B46A49500A16065 /* GDAssets.bundle in Resources */,
+				8176F4D51C1BA873004A4ECD /* Enterprise.entitlements in Resources */,
 				81AB435019B611A000BC9E53 /* Images.xcassets in Resources */,
 				8102E3E61B4C27290005728E /* LaunchScreen.xib in Resources */,
 				81AB444B19B61C1800BC9E53 /* enterpriselogo_xcf.png in Resources */,
@@ -371,7 +392,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -388,7 +411,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -416,6 +439,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -427,7 +451,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -441,6 +465,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = Enterprise/Enterprise.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Enterprise/Enterprise-Prefix.pch";
 				INFOPLIST_FILE = Enterprise/Info.plist;
@@ -448,7 +475,9 @@
 					"-lstdc++",
 					"-lz",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.good.example.contributor.jhawkins.enterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -459,6 +488,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = Enterprise/Enterprise.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Enterprise/Enterprise-Prefix.pch";
 				INFOPLIST_FILE = Enterprise/Info.plist;
@@ -466,7 +498,9 @@
 					"-lstdc++",
 					"-lz",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.good.example.contributor.jhawkins.enterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

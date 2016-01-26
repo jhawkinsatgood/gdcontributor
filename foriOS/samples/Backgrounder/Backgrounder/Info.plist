@@ -4,19 +4,28 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
-	<key>UIBackgroundModes</key>
+	<key>CFBundleDisplayName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundleDocumentTypes</key>
 	<array>
-		<string>audio</string>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.data</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.goodinternal.jhawkins.backgrounder</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>CFBundleDisplayName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
@@ -50,21 +59,12 @@
 	</array>
 	<key>GDLibraryMode</key>
 	<string>GDEnterprise</string>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeIconFiles</key>
-			<array/>
-			<key>LSHandlerRank</key>
-			<string>Default</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>public.data</string>
-			</array>
-		</dict>
-	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

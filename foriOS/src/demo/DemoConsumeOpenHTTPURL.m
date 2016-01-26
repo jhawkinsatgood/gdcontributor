@@ -46,7 +46,7 @@
 {
     // Send the request.
     [[[self.request selectProvider:pickListIndex]
-      setURL:@"https://helpdesk"]
+      setURL:@"https://intranet"]
      sendOrMessage:nil];
     // The above returns a message if there is an error in the send. The
     // message is also inserted into the Request object, which is dumped

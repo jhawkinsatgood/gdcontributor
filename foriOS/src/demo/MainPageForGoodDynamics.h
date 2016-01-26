@@ -20,9 +20,18 @@
  */
 
 #import <Foundation/Foundation.h>
+
+#ifdef WITH_GD_LAUNCHER
+#import "GTLauncherViewController.h"
+#define PROTOCOLS <GTLauncherViewControllerDelegate>
+#else
+#define PROTOCOLS
+#endif
+
 #import "MainPage.h"
 
-@interface MainPageForGoodDynamics : NSObject
+@interface MainPageForGoodDynamics : NSObject PROTOCOLS
+#undef PROTOCOLS
 @property (strong, nonatomic, readonly) MainPage *mainPage;
 @property (nonatomic, assign, readonly) BOOL hasAuthorized;
 

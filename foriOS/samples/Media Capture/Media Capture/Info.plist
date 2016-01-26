@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.goodinternal.jhawkins.mediacapture</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -29,7 +29,7 @@
 				<string>com.goodinternal.jhawkins.mediacapture.sc</string>
 				<string>com.goodinternal.jhawkins.mediacapture.sc2.1.0.0.0</string>
 				<string>com.good.gd.discovery</string>
-                <string>com.good.gd.discovery.enterprise</string>
+				<string>com.good.gd.discovery.enterprise</string>
 			</array>
 		</dict>
 	</array>

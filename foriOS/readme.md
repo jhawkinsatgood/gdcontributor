@@ -29,11 +29,11 @@ The contributor code has been tested in the following environment.
 
 Component                       | Version
 --------------------------------|--------
-Xcode                           | 6.4
-iOS simulator running iOS       | 8.4
-iPad device running iOS         | 9.0.2
-Good Dynamics SDK for iOS       | 2.0.4420
-Good Control and Good Proxy     | 2.0.3
+Xcode                           | 7.2
+iOS simulator running iOS       | 9.2
+iPad device running iOS         | 9.2.1
+Good Dynamics SDK for iOS       | 2.1.4439
+Good Control and Good Proxy     | 2.2.511
 OS X                            | 10.10.5
 
 The AppKinetics Workflow application has been tested with the following service
@@ -41,6 +41,6 @@ provider applications.
 
 Service       | Provider    | Version
 --------------|-------------|----------
-Send Email    | Good Work   | 1.5.2.459
-Open HTTP URL | Good Access | 2.4.4.740
-Transfer File | Good Share  | 3.2.0
+Send Email    | Good Work   | 2.1.0.2312
+Open HTTP URL | Good Access | 2.5.1.901
+Transfer File | Good Share  | 3.2.2

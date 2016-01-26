@@ -207,44 +207,24 @@
     [[GDFileManager defaultManager] attributesOfItemAtPath:filepath
                                                      error:&error];
 
-    if (attributes != nil) {
-        NSDate *lastModifiedDate = [attributes fileModificationDate];
-        if (!lastModifiedDate) {
-            lastModifiedDate = [attributes fileCreationDate];
-        }
-
-        NSString *lastModified;
-        if (lastModifiedDate) {
-            lastModified = [self simpleDate:lastModifiedDate];
-        }
-        else {
-            // getFileStat is deprecated, like the rest of GDFileSystem. It
-            // seems that files received as attachments to a service request
-            // don't get proper stats, which looks like a bug. For now, to get
-            // around that, use the deprecated function, which does give proper
-            // stats.
-            GDFileStat myStat;
-            BOOL statOK = [GDFileSystem getFileStat:filepath
-                                                 to:&myStat
-                                              error:&error];
-            if (statOK) {
-                lastModifiedDate =
-                [NSDate dateWithTimeIntervalSince1970:myStat.lastModifiedTime];
-                lastModified = [self simpleDate:lastModifiedDate];
-            }
-            else {
-                lastModified = [error description];
-            }
-        }
-        
-        return [NSString
-                stringWithFormat:@"Length: %lld, Modified: %@.\n",
-                [attributes fileSize], lastModified];
-    }
-    else {
+    if (attributes == nil) {
         return [NSString stringWithFormat:@"Failed to stat file \"%@\". %@.\n",
                 filepath, error];
     }
+
+    NSDate *lastModifiedDate = [attributes fileModificationDate];
+    if (!lastModifiedDate) {
+        lastModifiedDate = [attributes fileCreationDate];
+    }
+
+    NSString *lastModified = nil;
+    if (lastModifiedDate) {
+        lastModified = [self simpleDate:lastModifiedDate];
+    }
+    
+    return [NSString
+            stringWithFormat:@"Length: %lld, Modified: %@.\n",
+            [attributes fileSize], lastModified];
 }
 
 +(NSString *)byteDump:(NSString *)filepath

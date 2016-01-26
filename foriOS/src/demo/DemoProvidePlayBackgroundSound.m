@@ -19,7 +19,7 @@
  * THE SOFTWARE.
  */
 
-#import <GD/GDFileSystem.h>
+#import <GD/GDFileManager.h>
 
 #import "DemoProvidePlayBackgroundSound.h"
 #import "GdcServiceProviderPlayBackgroundSound.h"
@@ -92,13 +92,14 @@ static void demoProvidePlayBackgroundSoundLogger(NSString *message)
         NSError *error;
         BOOL outIsDir;
         BOOL createDir = NO;
-        if ([GDFileSystem fileExistsAtPath:outDirectory
+        GDFileManager *gdFileManager = [GDFileManager defaultManager];
+        if ([gdFileManager fileExistsAtPath:outDirectory
                                isDirectory:&outIsDir] )
         {
             if (!outIsDir) {
                 createDir = YES;
-                if (![GDFileSystem removeItemAtPath:outDirectory
-                                              error:&error] )
+                if (![gdFileManager removeItemAtPath:outDirectory
+                                               error:&error] )
                 {
                     [weakSelf.demoUserInterface
                      demoLogFormat:@"%s Failed to delete file \"%@\". %@.\n",
@@ -111,7 +112,7 @@ static void demoProvidePlayBackgroundSoundLogger(NSString *message)
         }
         
         if (createDir) {
-            if (![GDFileSystem createDirectoryAtPath:outDirectory
+            if (![gdFileManager createDirectoryAtPath:outDirectory
                          withIntermediateDirectories:YES
                                           attributes:nil
                                                error:&error] )
@@ -127,9 +128,9 @@ static void demoProvidePlayBackgroundSoundLogger(NSString *message)
                                            [inURL lastPathComponent] ]];
         NSString *outFilename = [outURL path];
         
-        if ([GDFileSystem moveItemAtPath:inFilename
-                              toPath:outFilename
-                               error:&error] )
+        if ([gdFileManager moveItemAtPath:inFilename
+                                   toPath:outFilename
+                                    error:&error] )
         {
             [weakSelf.demoUserInterface demoLogFormat:
              @"%s Moved attachment from \"%@\" to \"%@\" OK.\n",

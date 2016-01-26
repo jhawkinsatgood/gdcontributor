@@ -573,7 +573,8 @@ secAttrValue_SecAccessControlRef:(SecAccessControlRef)secAccessControlRef
     }
     
     NSMutableString *ret = [NSMutableString stringWithFormat:
-                            @"%ld bytes %@", size, allPrint ? @"\"" : @"(" ];
+                            @"%ld bytes %@", (unsigned long)size,
+                            allPrint ? @"\"" : @"(" ];
     
     for (int index=0; index < size; index++) {
         if ( (!allPrint) && index > 0) {
