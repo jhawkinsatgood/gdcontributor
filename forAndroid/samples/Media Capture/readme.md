@@ -1,8 +1,9 @@
 # Media Capture Application
 
 The application has been tested in the following environment.
+
 -   Android device: Samsung S4 running Android 5.0.1
--   iOS device: iPad running 8.4
+-   iOS device: iPad running 9.2.1
 
 Record Audio
 ============

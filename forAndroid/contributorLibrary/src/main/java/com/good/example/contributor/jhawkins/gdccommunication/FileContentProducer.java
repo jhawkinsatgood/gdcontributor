@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 Good Technology Corporation
+/* Copyright (c) 2016 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,7 @@
 
 package com.good.example.contributor.jhawkins.gdccommunication;
 
-
-import org.apache.http.entity.ContentProducer;
+import com.good.gd.apache.http.entity.ContentProducer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

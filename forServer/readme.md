@@ -66,6 +66,11 @@ following.
         Followed by some other output. The numbers will be different for your
         machine. Note the IP address and port number, which are `192.168.1.155`
         and `54011` respectively in the above.
+        
+        In case the above doesn't work, use an operating system utility to print
+        the IP address. For example, on some Linux systems `hostname -I` will
+        print the required information.
+        
     2.  Key Ctrl-C to terminate the server.
     3.  Add the IP address to the hosts file of the machine that hosts the GP
         server. The hosts file for Windows Server 2008 is at the following path:
@@ -147,11 +152,11 @@ deployment. Here is one way:
 2.  Open the Manage Applications screens, and locate the mobile application
     that will connect to the server. This could be the Enterprise contributor
     application, for example.
-3.  Click the pencil icon to edit the individual application. This opens the
-    Manage Application screen for the application.
-4.  Open the Servers tab.
-5.  Enter the FQDN and port number that you noted earlier and click Submit to
-    save the configuration.
+3.  Click the name of the application. This opens the Manage Application screen
+    for the application.
+4.  Open the Good Dynamics tab, then click to Edit the Server configuration.
+5.  Add as a server the FQDN and port number that you noted earlier, then click
+    Save and confirm to save the configuration.
     
 This enables connection to the application server from the GD deployment, and
 hence from GD mobile applications activated for its end users.

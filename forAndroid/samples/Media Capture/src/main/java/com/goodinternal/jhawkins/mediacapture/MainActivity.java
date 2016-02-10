@@ -34,6 +34,7 @@ import com.good.gd.GDAndroid;
  * once done launch the application UI.
  */
 public class MainActivity extends Activity {
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

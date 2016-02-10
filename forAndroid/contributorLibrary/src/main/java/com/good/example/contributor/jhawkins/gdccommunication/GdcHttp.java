@@ -1,4 +1,4 @@
-/* Copyright (c) 2015 Good Technology Corporation
+/* Copyright (c) 2016 Good Technology Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +25,10 @@ import com.good.gd.file.File;
 import com.good.gd.file.FileInputStream;
 import com.good.gd.net.GDHttpClient;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.EntityTemplate;
+import com.good.gd.apache.http.HttpEntity;
+import com.good.gd.apache.http.HttpResponse;
+import com.good.gd.apache.http.client.methods.HttpPost;
+import com.good.gd.apache.http.entity.EntityTemplate;
 
 import java.io.IOException;
 import java.net.URLConnection;
