@@ -150,7 +150,7 @@
             [NSString stringWithFormat:@"Failed to read data for URL \"%@\"",
              copyURL];
         }
-        *filename = [copyURL lastPathComponent];
+        *filename = [self pathForStub:[copyURL lastPathComponent]];
     }
     
     if (data) {
