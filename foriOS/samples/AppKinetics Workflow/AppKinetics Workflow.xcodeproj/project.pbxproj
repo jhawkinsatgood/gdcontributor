@@ -33,6 +33,7 @@
 		817CDCF61AE855570066B73B /* PathStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 817CDCB51AE855570066B73B /* PathStore.m */; };
 		819683331AE8685F00E8BF5E /* GdcServiceRequestPlayBackgroundSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 819683321AE8685F00E8BF5E /* GdcServiceRequestPlayBackgroundSound.m */; };
 		81978E1A1AE885E7002B4E13 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 81978E191AE885E7002B4E13 /* sounds */; };
+		81BE28881C74EEA900F8A5E9 /* documents in Resources */ = {isa = PBXBuildFile; fileRef = 81BE28871C74EEA900F8A5E9 /* documents */; };
 		81CA69601A77FD2300EBF7D1 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CA695F1A77FD2300EBF7D1 /* LocalAuthentication.framework */; };
 		81CB20F319713E1900733EAE /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CB20EE19713E1900733EAE /* MessageUI.framework */; };
 		81CB20F419713E1900733EAE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CB20EF19713E1900733EAE /* MobileCoreServices.framework */; };
@@ -110,6 +111,7 @@
 		819683311AE8685F00E8BF5E /* GdcServiceRequestPlayBackgroundSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GdcServiceRequestPlayBackgroundSound.h; sourceTree = "<group>"; };
 		819683321AE8685F00E8BF5E /* GdcServiceRequestPlayBackgroundSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GdcServiceRequestPlayBackgroundSound.m; sourceTree = "<group>"; };
 		81978E191AE885E7002B4E13 /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sounds; path = "AppKinetics Workflow/sounds"; sourceTree = "<group>"; };
+		81BE28871C74EEA900F8A5E9 /* documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = documents; path = "AppKinetics Workflow/documents"; sourceTree = "<group>"; };
 		81CA695F1A77FD2300EBF7D1 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		81CB20EE19713E1900733EAE /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		81CB20EF19713E1900733EAE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -299,6 +301,7 @@
 		92C96BA81922096A0092DBE8 = {
 			isa = PBXGroup;
 			children = (
+				81BE28871C74EEA900F8A5E9 /* documents */,
 				81978E191AE885E7002B4E13 /* sounds */,
 				92C96C6A1922226B0092DBE8 /* readme.txt */,
 				92C96BCA1922096A0092DBE8 /* AppKinetics Workflow */,
@@ -448,6 +451,7 @@
 				8176F4D21C1BA0E4004A4ECD /* AppKinetics Workflow.entitlements in Resources */,
 				8102E3E81B4C5FAC0005728E /* LaunchScreen.xib in Resources */,
 				92C96C6C1922268C0092DBE8 /* workflowlogo_xcf.png in Resources */,
+				81BE28881C74EEA900F8A5E9 /* documents in Resources */,
 				92C96BE31922096B0092DBE8 /* Images.xcassets in Resources */,
 				92C96BCF1922096A0092DBE8 /* InfoPlist.strings in Resources */,
 			);
